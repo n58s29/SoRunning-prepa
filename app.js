@@ -263,8 +263,28 @@ function checkValidity() {
     var t = new Date(); t.setHours(0, 0, 0, 0);
     dateOk = p && !isNaN(p) && p > t;
   }
-  document.getElementById('btnGenerate').disabled =
-    !(key && type && dist && dateOk && level && sessions && vmaOk);
+
+  var missing = [];
+  if (!key)      missing.push('clé API');
+  if (!type)     missing.push('type de course');
+  if (!dist)     missing.push('distance');
+  if (!dateOk)   missing.push('date valide');
+  if (!level)    missing.push('niveau ➜ section 2');
+  if (!sessions) missing.push('séances/sem ➜ section 2');
+  if (!vmaOk)    missing.push('VMA invalide');
+
+  var hint = document.getElementById('genHint');
+  if (hint) {
+    if (missing.length > 0) {
+      hint.textContent = '⚠ Manquant : ' + missing.join(', ');
+      hint.style.color = 'rgba(247,115,180,0.9)';
+    } else {
+      hint.textContent = '⚡ Génération IA · 15 à 60 sec selon la durée du plan';
+      hint.style.color = '';
+    }
+  }
+
+  document.getElementById('btnGenerate').disabled = missing.length > 0;
 }
 
 // ══════════════════════════════════════════════════════════════

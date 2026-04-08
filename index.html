@@ -90,12 +90,12 @@
 
       <!-- Accordion 2 – Votre profil -->
       <div class="acc-section" id="acc-2">
-        <button class="acc-header" onclick="toggleAcc('acc-2')">
+        <button class="acc-header open" onclick="toggleAcc('acc-2')">
           <span class="acc-num">2</span>
           <span class="acc-title">Votre profil</span>
           <span class="acc-arrow">▾</span>
         </button>
-        <div class="acc-body" style="display:none;">
+        <div class="acc-body">
           <div class="form-row-2">
             <div class="field-group">
               <label class="field-label">Niveau</label>
@@ -234,7 +234,7 @@
         <span class="btn-icon">✨</span>
         <span id="btnLabel">Générer mon plan d'entraînement</span>
       </button>
-      <p class="gen-hint">⚡ Génération IA · 15 à 60 sec selon la durée du plan</p>
+      <p class="gen-hint" id="genHint">⚡ Génération IA · 15 à 60 sec selon la durée du plan</p>
     </div>
 
   </aside><!-- /left-panel -->
