@@ -1,1 +1,408 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Running Coach × Claude IA</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
 
+<div class="app-layout">
+
+  <!-- ════════════════════════════════
+       LEFT PANEL (dark sidebar)
+  ════════════════════════════════ -->
+  <aside class="left-panel">
+
+    <!-- Brand Bar -->
+    <div class="brand-bar">
+      <div class="brand-logo">🏃</div>
+      <div class="brand-text">
+        <span class="brand-name">Running Coach <em>× Claude IA</em></span>
+        <span class="brand-sub">Plan d'entraînement personnalisé</span>
+      </div>
+      <span class="version-badge">v2.0</span>
+    </div>
+
+    <!-- API Section -->
+    <div class="api-section">
+      <div class="api-section-title">
+        <span class="api-icon">🔑</span> Clé API Anthropic
+      </div>
+      <div class="api-notice">
+        Obtenez votre clé sur <strong>console.anthropic.com</strong> → <strong>API Keys</strong>.<br>
+        Votre clé commence par <code>sk-ant-</code>.
+      </div>
+      <div class="field-group">
+        <label class="field-label">Clé API</label>
+        <div class="pw-wrap">
+          <input type="password" id="apiKey" class="dark-input" placeholder="sk-ant-xxxxxxxxxxxxxxxx" autocomplete="off" oninput="checkValidity()">
+          <button class="btn-toggle-pw" onclick="togglePw()" title="Afficher / Masquer">👁</button>
+        </div>
+        <p class="field-hint">Non stockée · utilisée uniquement pour api.anthropic.com</p>
+      </div>
+    </div>
+
+    <!-- Scrollable accordion area -->
+    <div class="accordion-area">
+
+      <!-- Accordion 1 – La course cible -->
+      <div class="acc-section" id="acc-1">
+        <button class="acc-header open" onclick="toggleAcc('acc-1')">
+          <span class="acc-num">1</span>
+          <span class="acc-title">La course cible</span>
+          <span class="acc-arrow">▾</span>
+        </button>
+        <div class="acc-body">
+          <div class="form-row-2">
+            <div class="field-group">
+              <label class="field-label">Type</label>
+              <select id="raceType" class="dark-select" onchange="updateDistances(); checkValidity()">
+                <option value="">— Type —</option>
+                <option value="Route">🏙 Route</option>
+                <option value="Trail court">🌲 Trail court</option>
+                <option value="Trail long">⛰ Trail long</option>
+                <option value="Cross">❄ Cross</option>
+                <option value="Piste">🏟 Piste</option>
+                <option value="Course à obstacles">🧱 Obstacles</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Distance</label>
+              <select id="distance" class="dark-select" onchange="computeWeeks(); checkValidity()">
+                <option value="">— Dist. —</option>
+              </select>
+            </div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Date de la course</label>
+            <input type="text" id="raceDate" class="dark-input" placeholder="JJ/MM/AAAA" maxlength="10" oninput="maskDate(this); computeWeeks(); checkValidity()">
+            <div class="weeks-badge" id="weeksBadge"></div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Objectif chrono <span class="opt-label">(optionnel)</span></label>
+            <input type="text" id="targetTime" class="dark-input" placeholder="ex : 4:00:00" maxlength="8" oninput="maskTime(this)">
+            <p class="field-hint">H:MM:SS · Laissez vide si pas d'objectif précis</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accordion 2 – Votre profil -->
+      <div class="acc-section" id="acc-2">
+        <button class="acc-header" onclick="toggleAcc('acc-2')">
+          <span class="acc-num">2</span>
+          <span class="acc-title">Votre profil</span>
+          <span class="acc-arrow">▾</span>
+        </button>
+        <div class="acc-body" style="display:none;">
+          <div class="form-row-2">
+            <div class="field-group">
+              <label class="field-label">Niveau</label>
+              <select id="level" class="dark-select" onchange="checkValidity()">
+                <option value="">— Niveau —</option>
+                <option value="Débutant">🌱 Débutant</option>
+                <option value="Intermédiaire">📈 Intermédiaire</option>
+                <option value="Confirmé">🏆 Confirmé</option>
+                <option value="Expert">⭐ Expert</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Séances/sem</label>
+              <select id="sessionsPerWeek" class="dark-select" onchange="checkValidity()">
+                <option value="">— Nb —</option>
+                <option value="2">2 / sem</option>
+                <option value="3">3 / sem</option>
+                <option value="4">4 / sem</option>
+                <option value="5">5 / sem</option>
+                <option value="6">6 / sem</option>
+              </select>
+            </div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">
+              Km actuels / semaine
+              <span class="slider-val-inline" id="kmVal">30 km</span>
+            </label>
+            <input type="range" id="kmPerWeek" min="5" max="150" step="5" value="30" oninput="updateSlider()">
+            <p class="field-hint">5 – 150 km par semaine</p>
+          </div>
+          <div class="field-group">
+            <label class="field-label">VMA connue <span class="opt-label">(optionnel)</span></label>
+            <input type="number" id="vma" class="dark-input" placeholder="ex : 14.5 km/h" min="8" max="25" step="0.1" oninput="validateVMA(this); checkValidity()">
+            <p class="field-error" id="vmaErr">⚠ VMA entre 8 et 25 km/h</p>
+          </div>
+          <div class="vma-calc-box">
+            <p class="vma-calc-title">🧮 Calculer ma VMA depuis un chrono récent</p>
+            <div class="form-row-2">
+              <div class="field-group">
+                <label class="field-label" style="font-size:9px;">Distance réf.</label>
+                <select id="calcDist" class="dark-select">
+                  <option value="1.5">1 500 m</option>
+                  <option value="3">3 000 m</option>
+                  <option value="5" selected>5 km</option>
+                  <option value="10">10 km</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label class="field-label" style="font-size:9px;">Chrono (MM:SS)</label>
+                <input type="text" id="calcTime" class="dark-input" placeholder="ex : 25:30" maxlength="5" oninput="maskTimeShort(this)">
+              </div>
+            </div>
+            <button class="btn-calc-vma" onclick="calcVMA()">Estimer ma VMA</button>
+            <div class="vma-result" id="vmaResult"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accordion 3 – Santé et blessures -->
+      <div class="acc-section" id="acc-3">
+        <button class="acc-header" onclick="toggleAcc('acc-3')">
+          <span class="acc-num">3</span>
+          <span class="acc-title">Santé &amp; blessures</span>
+          <span class="acc-arrow">▾</span>
+        </button>
+        <div class="acc-body" style="display:none;">
+          <div class="field-group">
+            <label class="field-label">Pathologies <span class="opt-label">(multi-sélection)</span></label>
+            <div class="pills-wrap" id="pillsGroup">
+              <label class="pill" id="pill-1"><input type="checkbox" value="Tendinite achille" onchange="syncPill('pill-1',this)"> Tendinite achille</label>
+              <label class="pill" id="pill-2"><input type="checkbox" value="Syndrome rotulien" onchange="syncPill('pill-2',this)"> Rotule</label>
+              <label class="pill" id="pill-3"><input type="checkbox" value="Périostite tibiale" onchange="syncPill('pill-3',this)"> Périostite</label>
+              <label class="pill" id="pill-4"><input type="checkbox" value="Fasciite plantaire" onchange="syncPill('pill-4',this)"> Fasciite</label>
+              <label class="pill" id="pill-5"><input type="checkbox" value="Lombalgie" onchange="syncPill('pill-5',this)"> Lombalgie</label>
+              <label class="pill" id="pill-6"><input type="checkbox" value="Entorse cheville" onchange="syncPill('pill-6',this)"> Cheville</label>
+              <label class="pill" id="pill-7"><input type="checkbox" value="Problème cardiaque suivi" onchange="syncPill('pill-7',this)"> Cardiaque</label>
+              <label class="pill" id="pill-8"><input type="checkbox" value="Asthme à l'effort" onchange="syncPill('pill-8',this)"> Asthme</label>
+              <label class="pill" id="pill-9"><input type="checkbox" value="Surpoids / reprise progressive" onchange="syncPill('pill-9',this)"> Reprise</label>
+              <label class="pill" id="pill-10"><input type="checkbox" value="Hernie discale" onchange="syncPill('pill-10',this)"> Hernie disc.</label>
+              <label class="pill" id="pill-11"><input type="checkbox" value="Syndrome de loge" onchange="syncPill('pill-11',this)"> Compartiment</label>
+            </div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Précisions <span class="opt-label">(optionnel)</span></label>
+            <textarea id="injuriesDetail" class="dark-textarea" placeholder="Ex : reprise après fracture de fatigue il y a 3 mois, suivi kiné hebdomadaire..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accordion 4 – Modèle et options -->
+      <div class="acc-section" id="acc-4">
+        <button class="acc-header" onclick="toggleAcc('acc-4')">
+          <span class="acc-num">4</span>
+          <span class="acc-title">Modèle &amp; options</span>
+          <span class="acc-arrow">▾</span>
+        </button>
+        <div class="acc-body" style="display:none;">
+          <div class="field-group">
+            <label class="field-label">Méthode d'entraînement</label>
+            <select id="planStyle" class="dark-select" onchange="updateStyleHint()">
+              <option value="Classique FFA">📋 Classique FFA</option>
+              <option value="80/20 Polarisé">🎯 80/20 Polarisé</option>
+              <option value="Lydiard">🏔 Lydiard</option>
+              <option value="HIIT Intensif">⚡ HIIT Intensif</option>
+              <option value="Progressif doux">🌱 Progressif Doux</option>
+            </select>
+            <p class="field-hint" id="styleHint"></p>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Modèle Claude</label>
+            <select id="apiModel" class="dark-select">
+              <option value="claude-opus-4-6">Claude Opus 4.6 · Le plus puissant</option>
+              <option value="claude-sonnet-4-6" selected>Claude Sonnet 4.6 · Recommandé ✓</option>
+              <option value="claude-haiku-4-5-20251001">Claude Haiku 4.5 · Rapide &amp; économique</option>
+              <option value="claude-3-5-sonnet-20241022">Claude 3.5 Sonnet · Précédente génération</option>
+              <option value="claude-3-5-haiku-20241022">Claude 3.5 Haiku · Précédente génération</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Niveau de détail</label>
+            <select id="detailLevel" class="dark-select">
+              <option value="concis">Concis (type + durée)</option>
+              <option value="standard">Standard (éch. + cœur + récup)</option>
+              <option value="detaille" selected>Détaillé (allures + séquences)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /accordion-area -->
+
+    <!-- Generate Button -->
+    <div class="gen-area">
+      <button class="btn-generate" id="btnGenerate" onclick="generatePlan()" disabled>
+        <span class="btn-icon">✨</span>
+        <span id="btnLabel">Générer mon plan d'entraînement</span>
+      </button>
+      <p class="gen-hint">⚡ Génération IA · 15 à 60 sec selon la durée du plan</p>
+    </div>
+
+  </aside><!-- /left-panel -->
+
+  <!-- ════════════════════════════════
+       RIGHT STAGE (light area)
+  ════════════════════════════════ -->
+  <main class="right-stage">
+
+    <!-- Welcome State -->
+    <div class="welcome-state" id="welcomeState">
+      <div class="welcome-icon">🏃‍♂️</div>
+      <h2 class="welcome-title">Prêt(e) à vous lancer ?</h2>
+      <p class="welcome-sub">Remplissez le formulaire à gauche, entrez votre clé API Anthropic, puis cliquez sur <strong>Générer</strong>.</p>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <span class="fc-icon">📊</span>
+          <span class="fc-label">Volume km/semaine</span>
+        </div>
+        <div class="feature-card">
+          <span class="fc-icon">🔄</span>
+          <span class="fc-label">Régénérer une semaine</span>
+        </div>
+        <div class="feature-card">
+          <span class="fc-icon">📏</span>
+          <span class="fc-label">Allures VMA précises</span>
+        </div>
+        <div class="feature-card">
+          <span class="fc-icon">🎯</span>
+          <span class="fc-label">5 styles de plan</span>
+        </div>
+        <div class="feature-card">
+          <span class="fc-icon">📥</span>
+          <span class="fc-label">Export CSV</span>
+        </div>
+        <div class="feature-card">
+          <span class="fc-icon">🖨</span>
+          <span class="fc-label">Impression PDF A3</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div class="loading-state" id="loadingState">
+      <div class="loading-runner">🏃‍♂️</div>
+      <div class="spinner"></div>
+      <h3 class="loading-title">Génération de votre plan…</h3>
+      <p class="loading-sub">Claude analyse votre profil et construit votre programme</p>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+    </div>
+
+    <!-- Error Banner -->
+    <div class="error-banner" id="errorBox">
+      <div class="error-content">
+        <span class="error-icon">⚠️</span>
+        <div class="error-text-block">
+          <strong class="error-title">Erreur lors de la génération</strong>
+          <p id="errorMsg" class="error-msg"></p>
+        </div>
+      </div>
+      <button class="error-close" onclick="document.getElementById('errorBox').style.display='none'">✕</button>
+    </div>
+
+    <!-- Plan Container -->
+    <div id="planContainer">
+
+      <!-- Sticky Topbar -->
+      <div class="plan-topbar">
+        <div class="plan-title-area">
+          <h2 class="plan-main-title" id="planMainTitle">Plan d'entraînement</h2>
+          <p class="plan-subtitle" id="planSubtitle"></p>
+        </div>
+        <div class="plan-actions">
+          <button class="btn-action btn-glossary" onclick="openGlossary()">📖 Glossaire</button>
+          <button class="btn-action btn-csv"      onclick="exportCSV()">📥 CSV</button>
+          <button class="btn-action btn-reset"    onclick="resetPlan()">↩ Nouveau</button>
+          <button class="btn-action btn-pdf"      onclick="printPlan()">🖨 PDF A3</button>
+        </div>
+      </div>
+
+      <!-- Table Wrapper -->
+      <div class="plan-table-wrap">
+        <table class="plan-table" id="planTable">
+          <thead>
+            <tr>
+              <th class="th-week">Semaine</th>
+              <th>Lundi</th>
+              <th>Mardi</th>
+              <th>Mercredi</th>
+              <th>Jeudi</th>
+              <th>Vendredi</th>
+              <th class="th-weekend">Samedi</th>
+              <th class="th-weekend">Dimanche</th>
+            </tr>
+          </thead>
+          <tbody id="planBody"></tbody>
+        </table>
+      </div>
+
+      <!-- Legend Bar -->
+      <div class="legend-bar">
+        <h4 class="legend-title">Légende des types de séances</h4>
+        <div class="legend-items">
+          <div class="legend-item"><div class="legend-dot" style="background:#fde8f3;border-color:#f773b4;"></div>EF – Endurance Fond.</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#f7bfd9;border-color:#f773b4;"></div>SL – Sortie Longue</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#f773b4;"></div>VMA – Intervalles</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#fbd0e8;border-color:#f773b4;"></div>Seuil</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#000;"></div>PPG – Renforcement</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#fce4f1;border-color:#f773b4;"></div>Récup</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#fff;border-color:#ddd;"></div>Repos</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#f773b4;border:2px solid #000;border-radius:50%;"></div>🏁 Course</div>
+        </div>
+      </div>
+
+    </div><!-- /planContainer -->
+
+  </main><!-- /right-stage -->
+
+</div><!-- /app-layout -->
+
+<!-- ════════════════════════════════
+     MODAL – Glossaire
+════════════════════════════════ -->
+<div class="modal-overlay" id="modalGlossary" onclick="overlayClose(event,'modalGlossary')">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('modalGlossary')">✕</button>
+    <h3 class="modal-title">📖 Glossaire Running – Acronymes &amp; Définitions</h3>
+    <table class="gloss-table">
+      <tr><td>EF</td><td>Endurance Fondamentale</td><td>Allure de base, conversation possible. 60-70% FCM. Socle de tout plan.</td></tr>
+      <tr><td>SL</td><td>Sortie Longue</td><td>Séance longue (&gt;1h) en EF. Développe l'endurance aérobie et la résistance à la fatigue.</td></tr>
+      <tr><td>VMA</td><td>Vitesse Max. Aérobie</td><td>Vitesse à laquelle on atteint VO2max. Intervalles 30"/30" à 100-110%. Développe le moteur cardio.</td></tr>
+      <tr><td>Seuil</td><td>Allure Seuil Anaérobie</td><td>Allure soutenable 20-40 min. 85-90% FCM. Améliore la tolérance lactique.</td></tr>
+      <tr><td>PPG</td><td>Prépa Physique Générale</td><td>Renforcement : gainage, squats, fentes, plyométrie. Prévient les blessures.</td></tr>
+      <tr><td>Récup</td><td>Récupération Active</td><td>Footing très léger 25-40 min. Favorise l'élimination des déchets métaboliques.</td></tr>
+      <tr><td>FC / FCM</td><td>Fréquence Cardiaque / Max</td><td>Battements/min. FCM ≈ 220 − âge (approximatif).</td></tr>
+      <tr><td>Z1-Z5</td><td>Zones d'intensité</td><td>Z1 &lt;60% · Z2 60-70% (EF) · Z3 70-80% (tempo) · Z4 80-90% (seuil) · Z5 &gt;90% (VMA).</td></tr>
+      <tr><td>30/30</td><td>Fractionné 30''/30''</td><td>30 sec à 100-105% VMA puis 30 sec trot. Séance VMA classique très efficace.</td></tr>
+      <tr><td>Allure/Pace</td><td>Temps par kilomètre</td><td>Exprimée en min/km. Ex : 5:30/km = 5 min 30 sec par km.</td></tr>
+      <tr><td>Fartlek</td><td>Jeu de vitesse</td><td>Variations d'allure libres en nature. Ludique, développe la polyvalence aérobie.</td></tr>
+      <tr><td>Échauff.</td><td>Échauffement</td><td>15-20 min footing léger + éducatifs avant toute séance intense. Obligatoire !</td></tr>
+      <tr><td>RC</td><td>Retour au Calme</td><td>10-15 min footing très léger + étirements après séance intense.</td></tr>
+      <tr><td>D+</td><td>Dénivelé Positif</td><td>Cumul des montées en mètres. Indicateur de difficulté en trail.</td></tr>
+      <tr><td>Affûtage</td><td>Tapering</td><td>Phase finale (2-3 sem.) de réduction du volume pour arriver frais le jour J.</td></tr>
+      <tr><td>Rep / r</td><td>Répétition / Récup</td><td>Ex : 8×400m r=90" = 8 fois 400m avec 90 sec de récup entre chaque répétition.</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     MODAL – Regen
+════════════════════════════════ -->
+<div class="modal-overlay" id="modalRegen" onclick="overlayClose(event,'modalRegen')">
+  <div class="modal-box modal-box-sm">
+    <button class="modal-close" onclick="closeModal('modalRegen')">✕</button>
+    <h3 class="modal-title">🔄 Régénérer la semaine <span id="regenWeekNum"></span></h3>
+    <p class="modal-desc">Donnez une consigne spécifique ou laissez vide pour une régénération standard.</p>
+    <div class="field-group">
+      <label class="field-label" style="color:#333;">Consigne spéciale <span class="opt-label">(optionnel)</span></label>
+      <textarea id="regenNote" placeholder="Ex : j'ai un voyage ce weekend, pas de sortie longue. Ou : augmenter l'intensité. Ou : remplacer VMA par seuil..." style="border:1.5px solid #f7bfd9;border-radius:8px;width:100%;padding:9px 11px;font-size:12px;resize:vertical;min-height:70px;font-family:inherit;background:#fff;color:#000;outline:none;transition:border-color .15s;"></textarea>
+    </div>
+    <button class="btn-generate-modal" onclick="confirmRegen()">
+      <span>🔄</span> Régénérer cette semaine
+    </button>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
