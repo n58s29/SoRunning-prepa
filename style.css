@@ -355,8 +355,8 @@ html, body {
 }
 
 .dark-select option {
-  background: #1a1a1a;
-  color: var(--white);
+  background: #ffffff;
+  color: #000000;
 }
 
 .dark-textarea {
