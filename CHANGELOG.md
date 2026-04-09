@@ -4,6 +4,49 @@ Toutes les modifications notables de ce projet sont documentées ici.
 
 ---
 
+## [3.0.0] — 2026-04-09
+
+### Refonte design — Kinetic Editorial (Premium Sport Performance)
+
+#### Ajouté
+- **Nouveau design system "Kinetic Editorial"** — esthétique premium sport inspirée des éditoriaux mode/auto haute gamme
+- **Sidebar de navigation** fixe (210 px) avec logo "Performance / Elite Athletics", nav items Course / Profile / Options et coach card en pied
+- **Topbar** avec logo italique "Kinetic Editorial", top nav avec indicateur actif (underline rose) et bouton "CONNECT GEAR"
+- **Barre de progression d'étapes** en bas de l'interface : points animés + indicateur textuel "STEP 01 OF 03" + boutons "← PREV" / "NEXT PHASE →"
+- **Grille terrain asymétrique** (Step 1) : carte Route en featured (span 2 lignes), 4 cartes normales, carte Obstacles pleine largeur — avec numéros, tags et flèche CTA
+- **Cards niveau** (Step 2) avec numéros, checkmark animé à la sélection et badge rose
+- **Volume Card** avec grande valeur numérique animée et slider rose à glow
+- **Contraintes physiologiques** en grille 2×2 (Step 3) avec cases à cocher visuelles
+- **Section "Neural Engine Integration"** — panel glassmorphique regroupant clé API, sélecteur de modèle, méthode d'entraînement et niveau de détail
+- **Plan Summary Card** sticky (Step 3) : durée/intensité/pace calculés dynamiquement + bouton "GENERATE MY PLAN" dégradé rose
+- **Stats bar** dans la vue plan : Volume total KM · Intensités · Difficulté · Target Pace
+- **Polices** : Plus Jakarta Sans (headings) + Inter (body) via Google Fonts
+- `updatePlanSummary()` — mise à jour en temps réel du résumé de plan (durée, niveau, pace)
+- `renderStatsBar()` — calcul et affichage du volume total et des métriques du plan généré
+
+#### Modifié
+- Thème entièrement sombre : `#0e0e0e` base, surface tiers `#131313 / #1a1a1a / #262626`
+- Couleur primaire : `#ff86bf` (rose premium) avec gradient `#ff86bf → #ff6cb6` sur les CTAs
+- Couleur tertiaire `#98a1ff` pour les jours de week-end et séances PPG
+- Couleurs des types de séances adaptées au thème sombre (tinted rgba, pas de fond blanc)
+- Architecture layout : panel gauche 440 px → sidebar fixe 210 px + zone contenu principale pleine largeur
+- Step 1 occupe désormais toute la largeur de la zone contenu (plus de split gauche/droite)
+- Clé API déplacée de la zone de génération (toujours visible) vers Step 3 — Neural Engine
+- Bouton Générer déplacé dans la Plan Summary Card (Step 3)
+- `goToStep()` met à jour sidebar nav, top nav, indicateur textuel et scrolle la zone contenu
+- `showError()` / `resetPlan()` reviennent à Step 1 au lieu d'afficher un écran d'accueil séparé
+- `generatePlan()` masque les steps et la bottom bar pendant la génération et l'affichage du plan
+- Labels boutons en anglais ("GENERATE MY PLAN", "NEXT PHASE", etc.) pour cohérence éditoriale
+
+#### Supprimé
+- Écran d'accueil "Prêt(e) à vous lancer ?" (remplacé par le wizard directement)
+- Navigation wizard circulaire (wn-1/2/3) — remplacée par sidebar nav + bottom bar
+- Panel gauche `#0d0d0d` avec zone scrollable séparée
+- Stage droit `#fafafa` (thème clair)
+- `race-card` class → renommée `terrain-card` avec layout éditorial
+
+---
+
 ## [2.1.1] — 2026-04-09
 
 ### Fix — bouton Générer toujours grisé

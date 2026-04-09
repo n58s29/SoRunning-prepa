@@ -1,34 +1,35 @@
-# Running Coach × Claude IA
+# Kinetic Editorial — Running Coach IA
 
-Générateur de plans d'entraînement running personnalisés, propulsé par l'API Anthropic Claude.
+Générateur de plans d'entraînement running personnalisés, propulsé par l'API Anthropic Claude. Interface premium "Kinetic Editorial" — design system sport haut de gamme.
 
 ## Présentation
 
 Application web 100 % front-end (HTML/CSS/JS) qui produit un plan d'entraînement complet semaine par semaine à partir de votre profil de coureur. Aucun serveur, aucune inscription — votre clé API Anthropic suffit.
 
+Design inspiré des éditoriaux mode/auto premium : thème sombre intégral, typographie Plus Jakarta Sans + Inter, surface tiers, glassmorphism, et progression éditoriale en 3 étapes.
+
 ## Fonctionnalités
 
 - **Génération IA** — Plan structuré en JSON par Claude (Opus, Sonnet ou Haiku), avec phases, volume hebdomadaire et allures précises
-- **5 disciplines** — Route, Trail court, Trail long, Cross, Piste, Course à obstacles
+- **6 disciplines** — Route, Trail court, Trail long, Cross, Piste, Course à obstacles
 - **Allures VMA** — Calcul automatique EF / SL / Seuil / VMA / Récup depuis votre VMA (km/h)
 - **Calculateur VMA** — Estimation depuis un chrono récent (1 500 m, 3 km, 5 km, 10 km)
 - **5 styles de plan** — Classique FFA, 80/20 Polarisé, Lydiard, HIIT Intensif, Progressif Doux
-- **Santé & blessures** — Pathologies prises en compte dans la génération (tendinite, rotule, lombalgie…)
+- **Contraintes physiologiques** — 11 pathologies prises en compte (tendinite, rotule, lombalgie, fasciite…)
 - **Régénération par semaine** — Relancez une semaine précise avec une consigne libre
 - **Export CSV** — Téléchargement du plan complet (UTF-8, compatible Excel)
 - **Impression PDF A3** — Mise en page paysage optimisée pour l'impression ou l'export PDF
 - **Glossaire intégré** — Définitions des acronymes running (EF, SL, VMA, PPG, Seuil…)
+- **Stats bar** — Volume total, intensités, difficulté et pace cible affichés après génération
 
 ## Utilisation
 
 1. Ouvrez `index.html` dans un navigateur moderne (Chrome, Edge, Firefox)
-2. Entrez votre clé API Anthropic (`sk-ant-...`) — obtenez-la sur [console.anthropic.com](https://console.anthropic.com)
-3. Parcourez le **wizard en 3 étapes** dans le panneau gauche :
-   - **Étape 1 – Course** — type (cards visuelles), distance, date, objectif chrono
-   - **Étape 2 – Profil** — niveau (cards), séances/semaine, kilométrage, VMA
-   - **Étape 3 – Options** — pathologies, méthode d'entraînement, modèle Claude, détail
-4. Entrez votre clé API dans la zone de génération (toujours visible en bas)
-5. Cliquez sur **Générer mon plan d'entraînement**
+2. Parcourez le **wizard en 3 étapes** dans la zone principale :
+   - **Step 1 — Select Your Course** — type de terrain (cards visuelles asymétriques), distance, date, objectif chrono
+   - **Step 2 — Runner Profile** — niveau (cards), séances/semaine, kilométrage, VMA
+   - **Step 3 — Health Optimization** — contraintes physiologiques, Neural Engine (clé API + modèle + méthode)
+3. Dans le **Plan Summary** (Step 3), cliquez sur **GENERATE MY PLAN**
 
 > La clé API n'est jamais stockée. Elle est utilisée uniquement pour l'appel direct à `api.anthropic.com` depuis votre navigateur.
 
@@ -45,11 +46,23 @@ Application web 100 % front-end (HTML/CSS/JS) qui produit un plan d'entraînemen
 ## Structure des fichiers
 
 ```
-index.html   — Structure HTML (wizard 3 étapes + stage plan)
-style.css    — Design dark panel / light stage, cards visuelles, animations
+index.html   — Structure HTML (sidebar + topbar + wizard 3 étapes + vue plan)
+style.css    — Design system Kinetic Editorial (thème sombre, surface tiers, animations)
 app.js       — Logique : wizard, API Claude, génération du prompt, parsing JSON,
-               rendu tableau, export CSV, impression PDF, calculateur VMA
+               rendu tableau, stats bar, export CSV, impression PDF, calculateur VMA
 ```
+
+## Design System
+
+| Token | Valeur | Usage |
+|-------|--------|-------|
+| `--bg` | `#0e0e0e` | Fond principal |
+| `--surface` | `#1a1a1a` | Cartes et inputs |
+| `--surface-high` | `#262626` | Cartes actives |
+| `--primary` | `#ff86bf` | Accent rose premium |
+| `--tertiary` | `#98a1ff` | Week-end, PPG |
+| `--font-display` | Plus Jakarta Sans | Headings, CTAs |
+| `--font-body` | Inter | Corps de texte |
 
 ## Types de séances
 
@@ -65,13 +78,13 @@ app.js       — Logique : wizard, API Claude, génération du prompt, parsing J
 
 ## Prérequis
 
-- Navigateur moderne avec support `fetch` / `XMLHttpRequest` (Chrome 90+, Edge 90+, Firefox 90+)
+- Navigateur moderne (Chrome 90+, Edge 90+, Firefox 90+)
 - Clé API Anthropic active avec crédits disponibles
 - Connexion internet (appel direct à `api.anthropic.com`)
 
 ## Version
 
-**v2.1.1** — Fix bouton Générer grisé (select niveau sans options) · voir [CHANGELOG.md](CHANGELOG.md)
+**v3.0.0** — Refonte design Kinetic Editorial — voir [CHANGELOG.md](CHANGELOG.md)
 
 ## Limites connues
 

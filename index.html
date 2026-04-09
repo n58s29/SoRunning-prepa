@@ -3,7 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Running Coach × Claude IA</title>
+<title>Kinetic Editorial — Running Coach IA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,600;0,700;0,800;1,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -11,152 +14,175 @@
 <div class="app-layout">
 
   <!-- ═══════════════════════════════════════
-       LEFT PANEL
+       SIDEBAR
   ═══════════════════════════════════════ -->
-  <aside class="left-panel">
-
-    <!-- Brand Bar -->
-    <div class="brand-bar">
-      <div class="brand-logo">🏃</div>
-      <div class="brand-text">
-        <span class="brand-name">Running Coach <em>× Claude IA</em></span>
-        <span class="brand-sub">Plan d'entraînement personnalisé</span>
-      </div>
-      <span class="version-badge">v2.0</span>
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">Performance</div>
+      <div class="brand-sub">ELITE ATHLETICS</div>
     </div>
 
-    <!-- Wizard Navigation -->
-    <div class="wizard-nav">
-      <div class="wn-step active" id="wn-1" onclick="goToStep(1)" title="La course cible">
-        <div class="wn-circle">1</div>
-        <div class="wn-label">Course</div>
-      </div>
-      <div class="wn-connector"></div>
-      <div class="wn-step" id="wn-2" onclick="goToStep(2)" title="Votre profil">
-        <div class="wn-circle">2</div>
-        <div class="wn-label">Profil</div>
-      </div>
-      <div class="wn-connector"></div>
-      <div class="wn-step" id="wn-3" onclick="goToStep(3)" title="Santé & Options">
-        <div class="wn-circle">3</div>
-        <div class="wn-label">Options</div>
+    <nav class="sidebar-nav">
+      <a class="nav-item active" id="nav-1" href="#" onclick="goToStep(1); return false;">
+        <svg class="nav-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Course
+      </a>
+      <a class="nav-item" id="nav-2" href="#" onclick="goToStep(2); return false;">
+        <svg class="nav-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        Profile
+      </a>
+      <a class="nav-item" id="nav-3" href="#" onclick="goToStep(3); return false;">
+        <svg class="nav-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+        Options
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="coach-card">
+        <div class="coach-avatar">🏃</div>
+        <div class="coach-info">
+          <div class="coach-name">Running Coach</div>
+          <div class="coach-role">Claude IA</div>
+        </div>
       </div>
     </div>
+  </aside>
 
-    <!-- Steps Content (scrollable) -->
-    <div class="steps-container">
+  <!-- ═══════════════════════════════════════
+       MAIN AREA
+  ═══════════════════════════════════════ -->
+  <main class="main-area">
 
-      <!-- ─── STEP 1 – La course cible ─── -->
-      <div class="step-content" id="step-1">
-        <div class="step-header">
-          <h3 class="step-title">La course cible</h3>
-          <p class="step-desc">Choisissez votre type de course et définissez votre objectif</p>
-        </div>
-
-        <!-- Race Type Cards -->
-        <div class="field-group">
-          <div class="field-label-row">Type de course <span class="req-star">*</span></div>
-          <div class="race-type-grid" id="raceTypeGrid">
-            <div class="race-card" data-val="Route" onclick="selectRaceType(this)">
-              <span class="rc-icon">🏙</span>
-              <span class="rc-label">Route</span>
-            </div>
-            <div class="race-card" data-val="Trail court" onclick="selectRaceType(this)">
-              <span class="rc-icon">🌲</span>
-              <span class="rc-label">Trail court</span>
-            </div>
-            <div class="race-card" data-val="Trail long" onclick="selectRaceType(this)">
-              <span class="rc-icon">⛰</span>
-              <span class="rc-label">Trail long</span>
-            </div>
-            <div class="race-card" data-val="Cross" onclick="selectRaceType(this)">
-              <span class="rc-icon">❄</span>
-              <span class="rc-label">Cross</span>
-            </div>
-            <div class="race-card" data-val="Piste" onclick="selectRaceType(this)">
-              <span class="rc-icon">🏟</span>
-              <span class="rc-label">Piste</span>
-            </div>
-            <div class="race-card" data-val="Course à obstacles" onclick="selectRaceType(this)">
-              <span class="rc-icon">🧱</span>
-              <span class="rc-label">Obstacles</span>
-            </div>
-          </div>
-          <!-- Hidden select (JS compat) -->
-          <select id="raceType" style="display:none" onchange="updateDistances(); checkValidity()">
-            <option value="Route">Route</option>
-            <option value="Trail court">Trail court</option>
-            <option value="Trail long">Trail long</option>
-            <option value="Cross">Cross</option>
-            <option value="Piste">Piste</option>
-            <option value="Course à obstacles">Course à obstacles</option>
-          </select>
-        </div>
-
-        <!-- Distance -->
-        <div class="field-group" id="distanceGroup" style="display:none">
-          <div class="field-label-row">Distance <span class="req-star">*</span></div>
-          <select id="distance" class="dark-select" onchange="computeWeeks(); checkValidity()">
-            <option value="">— Sélectionnez une distance —</option>
-          </select>
-        </div>
-
-        <!-- Date -->
-        <div class="field-group">
-          <div class="field-label-row">Date de la course <span class="req-star">*</span></div>
-          <input type="date" id="raceDate" class="dark-input date-input" onchange="computeWeeks(); checkValidity()">
-          <div class="weeks-badge" id="weeksBadge"></div>
-        </div>
-
-        <!-- Target Time -->
-        <div class="field-group">
-          <div class="field-label-row">
-            Objectif chrono
-            <span class="opt-tag">optionnel</span>
-          </div>
-          <input type="text" id="targetTime" class="dark-input" placeholder="ex : 4:00:00" maxlength="8" oninput="maskTime(this)">
-          <p class="field-hint">Format H:MM:SS · Laissez vide si aucun objectif précis</p>
-        </div>
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="topbar-logo">Kinetic Editorial</div>
+      <nav class="top-nav">
+        <a class="top-nav-item" href="#" onclick="goToStep(1); return false;" id="tnav-1">Course</a>
+        <a class="top-nav-item" href="#" id="tnav-2">Analytics</a>
+        <a class="top-nav-item" href="#" id="tnav-3">Training</a>
+      </nav>
+      <div class="top-actions">
+        <button class="btn-connect-gear" onclick="document.getElementById('apiKey').focus(); goToStep(3);">CONNECT GEAR</button>
       </div>
+    </header>
 
-      <!-- ─── STEP 2 – Votre profil ─── -->
-      <div class="step-content" id="step-2" style="display:none">
-        <div class="step-header">
-          <h3 class="step-title">Votre profil</h3>
-          <p class="step-desc">Partagez votre niveau et vos habitudes d'entraînement</p>
+    <!-- CONTENT AREA -->
+    <div class="content-area" id="contentArea">
+
+      <!-- ═══ STEP 1 – Course / Terrain ═══ -->
+      <section class="wizard-step" id="step-1">
+        <div class="step-hero">
+          <div class="step-eyebrow">STEP 01 — TERRAIN SELECTION</div>
+          <h1 class="step-display">Select Your Course</h1>
+          <p class="step-lead">The surface defines the strategy. Choose your performance environment to tailor your elite training plan.</p>
         </div>
 
-        <!-- Level Cards -->
-        <div class="field-group">
-          <div class="field-label-row">Niveau de pratique <span class="req-star">*</span></div>
+        <div class="terrain-grid" id="raceTypeGrid">
+          <div class="terrain-card terrain-card--featured" data-val="Route" onclick="selectRaceType(this)">
+            <div class="tc-number">01</div>
+            <div class="tc-icon-wrap"><span class="tc-icon">🏙</span></div>
+            <h3 class="tc-name">Route</h3>
+            <p class="tc-desc">Optimisé pour la vitesse, la régularité et le travail cardiovasculaire au seuil sur surface plane.</p>
+            <div class="tc-tags">
+              <span class="tc-tag">⚡ PACE</span>
+              <span class="tc-tag">📊 THRESHOLD</span>
+            </div>
+            <div class="tc-arrow">→</div>
+          </div>
+          <div class="terrain-card" data-val="Trail court" onclick="selectRaceType(this)">
+            <div class="tc-number">02</div>
+            <h3 class="tc-name">Trail Court</h3>
+            <p class="tc-desc">Puissance explosive et technique en milieu naturel.</p>
+          </div>
+          <div class="terrain-card" data-val="Trail long" onclick="selectRaceType(this)">
+            <div class="tc-number">03</div>
+            <h3 class="tc-name">Long Trail</h3>
+            <p class="tc-desc">Endurance ultra-distance en terrain montagneux.</p>
+          </div>
+          <div class="terrain-card" data-val="Cross" onclick="selectRaceType(this)">
+            <div class="tc-number">04</div>
+            <h3 class="tc-name">Cross</h3>
+            <p class="tc-desc">Terrains variés, engagement musculaire mixte.</p>
+          </div>
+          <div class="terrain-card" data-val="Piste" onclick="selectRaceType(this)">
+            <div class="tc-number">05</div>
+            <h3 class="tc-name">Piste</h3>
+            <p class="tc-desc">Vitesse pure, métriques VO2max, technique parfaite.</p>
+          </div>
+          <div class="terrain-card terrain-card--wide" data-val="Course à obstacles" onclick="selectRaceType(this)">
+            <div class="tc-number">06</div>
+            <h3 class="tc-name">Obstacles</h3>
+            <p class="tc-desc">Force fonctionnelle et engagement musculaire diversifié pour des parcours atypiques.</p>
+            <div class="tc-tags">
+              <span class="tc-tag">⛰ ELEVATION FOCUS</span>
+              <span class="tc-tag">⚡ AGILITY</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hidden select (JS compat) -->
+        <select id="raceType" style="display:none" onchange="updateDistances(); checkValidity()">
+          <option value="Route">Route</option>
+          <option value="Trail court">Trail court</option>
+          <option value="Trail long">Trail long</option>
+          <option value="Cross">Cross</option>
+          <option value="Piste">Piste</option>
+          <option value="Course à obstacles">Course à obstacles</option>
+        </select>
+
+        <!-- Race Params -->
+        <div class="race-params-row">
+          <div class="param-field" id="distanceGroup" style="display:none">
+            <label class="param-label">Distance <span class="req-star">*</span></label>
+            <select id="distance" class="ke-select" onchange="computeWeeks(); checkValidity()">
+              <option value="">— Sélectionnez —</option>
+            </select>
+          </div>
+          <div class="param-field">
+            <label class="param-label">Date de course <span class="req-star">*</span></label>
+            <input type="date" id="raceDate" class="ke-input" onchange="computeWeeks(); checkValidity()">
+            <div class="weeks-badge" id="weeksBadge" style="display:none"></div>
+          </div>
+          <div class="param-field">
+            <label class="param-label">Objectif chrono <span class="opt-tag">optionnel</span></label>
+            <input type="text" id="targetTime" class="ke-input" placeholder="ex : 4:00:00" maxlength="8" oninput="maskTime(this)">
+            <p class="param-hint">Format H:MM:SS · Laissez vide si aucun objectif</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ STEP 2 – Profile ═══ -->
+      <section class="wizard-step" id="step-2" style="display:none">
+        <div class="step-hero">
+          <div class="step-eyebrow">STEP 02 — CALIBRATION</div>
+          <h1 class="step-display">Runner Profile</h1>
+          <p class="step-lead">Define your baseline. Kinetic Editorial adapts your training load based on your physiological history and current performance threshold.</p>
+        </div>
+
+        <!-- Experience Level -->
+        <div class="section-block">
+          <div class="section-label">EXPERIENCE LEVEL</div>
           <div class="level-grid">
             <div class="level-card" data-val="Débutant" onclick="selectLevel(this)">
-              <span class="lc-icon">🌱</span>
-              <div class="lc-text">
-                <span class="lc-label">Débutant</span>
-                <span class="lc-sub">Débute le running</span>
-              </div>
+              <div class="lc-num">01</div>
+              <h3 class="lc-title">Beginner</h3>
+              <p class="lc-desc">Débute le running. Focus endurance fondamentale.</p>
             </div>
             <div class="level-card" data-val="Intermédiaire" onclick="selectLevel(this)">
-              <span class="lc-icon">📈</span>
-              <div class="lc-text">
-                <span class="lc-label">Intermédiaire</span>
-                <span class="lc-sub">2 à 5 ans de pratique</span>
-              </div>
+              <div class="lc-num">02</div>
+              <h3 class="lc-title">Intermediate</h3>
+              <p class="lc-desc">2 à 5 ans de pratique. Familier avec les intervalles.</p>
+              <div class="lc-check-icon">✓</div>
             </div>
             <div class="level-card" data-val="Confirmé" onclick="selectLevel(this)">
-              <span class="lc-icon">🏆</span>
-              <div class="lc-text">
-                <span class="lc-label">Confirmé</span>
-                <span class="lc-sub">5+ ans, compétitions</span>
-              </div>
+              <div class="lc-num">03</div>
+              <h3 class="lc-title">Advanced</h3>
+              <p class="lc-desc">Coureur régulier. Ciblant des PRs et métriques VO2.</p>
             </div>
             <div class="level-card" data-val="Expert" onclick="selectLevel(this)">
-              <span class="lc-icon">⭐</span>
-              <div class="lc-text">
-                <span class="lc-label">Expert</span>
-                <span class="lc-sub">Haut niveau / FFA</span>
-              </div>
+              <div class="lc-num">04</div>
+              <h3 class="lc-title">Expert</h3>
+              <p class="lc-desc">Performance sub-élite. Haut volume hebdomadaire.</p>
             </div>
           </div>
           <select id="level" style="display:none" onchange="checkValidity()">
@@ -167,312 +193,377 @@
           </select>
         </div>
 
-        <!-- Sessions per week -->
-        <div class="field-group">
-          <div class="field-label-row">Séances par semaine <span class="req-star">*</span></div>
-          <div class="seg-control">
-            <button type="button" class="seg-btn" data-val="2" onclick="selectSessions(this)">2</button>
-            <button type="button" class="seg-btn" data-val="3" onclick="selectSessions(this)">3</button>
-            <button type="button" class="seg-btn" data-val="4" onclick="selectSessions(this)">4</button>
-            <button type="button" class="seg-btn" data-val="5" onclick="selectSessions(this)">5</button>
-            <button type="button" class="seg-btn" data-val="6" onclick="selectSessions(this)">6</button>
-          </div>
-          <select id="sessionsPerWeek" style="display:none" onchange="checkValidity()">
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-          </select>
-        </div>
+        <!-- Training Habits + Weekly Volume -->
+        <div class="two-col-section">
+          <div class="col-block">
+            <div class="section-label">TRAINING HABITS</div>
 
-        <!-- KM per week slider -->
-        <div class="field-group">
-          <div class="field-label-row">
-            Kilométrage hebdomadaire actuel
-            <span class="km-display" id="kmVal">30 km</span>
-          </div>
-          <input type="range" id="kmPerWeek" min="5" max="150" step="5" value="30" oninput="updateSlider()">
-          <div class="slider-minmax">
-            <span>5 km</span>
-            <span>150 km</span>
-          </div>
-        </div>
-
-        <!-- VMA -->
-        <div class="field-group">
-          <div class="field-label-row">
-            VMA (vitesse maximale aérobie)
-            <span class="opt-tag">optionnel</span>
-          </div>
-          <input type="number" id="vma" class="dark-input" placeholder="ex : 14.5 km/h" min="8" max="25" step="0.1" oninput="validateVMA(this); checkValidity()">
-          <p class="field-error" id="vmaErr">⚠ VMA entre 8 et 25 km/h</p>
-          <p class="field-hint">Permet des allures précises · sinon allures relatives</p>
-        </div>
-
-        <!-- VMA Calculator (collapsible) -->
-        <div class="vma-calc-box">
-          <button type="button" class="vcb-toggle" onclick="toggleVMACalc()">
-            <span>🧮 Calculer ma VMA depuis un chrono récent</span>
-            <span class="vcb-arrow" id="vcbArrow">▾</span>
-          </button>
-          <div class="vcb-body" id="vcbBody">
-            <div class="form-row-2">
-              <div class="field-group">
-                <div class="field-label-row" style="font-size:9px">Distance réf.</div>
-                <select id="calcDist" class="dark-select">
-                  <option value="1.5">1 500 m</option>
-                  <option value="3">3 000 m</option>
-                  <option value="5" selected>5 km</option>
-                  <option value="10">10 km</option>
-                </select>
+            <div class="habit-group">
+              <div class="habit-label">Séances par semaine <span class="req-star">*</span></div>
+              <div class="seg-control">
+                <button type="button" class="seg-btn" data-val="2" onclick="selectSessions(this)">2</button>
+                <button type="button" class="seg-btn" data-val="3" onclick="selectSessions(this)">3</button>
+                <button type="button" class="seg-btn" data-val="4" onclick="selectSessions(this)">4</button>
+                <button type="button" class="seg-btn" data-val="5" onclick="selectSessions(this)">5</button>
+                <button type="button" class="seg-btn" data-val="6" onclick="selectSessions(this)">6</button>
               </div>
-              <div class="field-group">
-                <div class="field-label-row" style="font-size:9px">Chrono (MM:SS)</div>
-                <input type="text" id="calcTime" class="dark-input" placeholder="25:30" maxlength="5" oninput="maskTimeShort(this)">
+              <select id="sessionsPerWeek" style="display:none" onchange="checkValidity()">
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-block">
+            <div class="section-label">WEEKLY VOLUME</div>
+            <div class="volume-card">
+              <div class="volume-display-row">
+                <span class="volume-label-sm">Current Goal</span>
+                <span class="volume-val" id="kmVal">30 km</span>
+              </div>
+              <input type="range" id="kmPerWeek" class="ke-range" min="5" max="150" step="5" value="30" oninput="updateSlider()">
+              <div class="slider-minmax">
+                <span>5 km</span>
+                <span>150 km</span>
               </div>
             </div>
-            <button type="button" class="btn-calc-vma" onclick="calcVMA()">Estimer ma VMA</button>
-            <div class="vma-result" id="vmaResult"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ─── STEP 3 – Santé & Options ─── -->
-      <div class="step-content" id="step-3" style="display:none">
-        <div class="step-header">
-          <h3 class="step-title">Santé &amp; Options</h3>
-          <p class="step-desc">Personnalisez les paramètres avancés de votre programme</p>
-        </div>
-
-        <!-- Health pills -->
-        <div class="field-group">
-          <div class="field-label-row">
-            Pathologies ou contraintes
-            <span class="opt-tag">multi-choix</span>
-          </div>
-          <div class="pills-wrap" id="pillsGroup">
-            <label class="pill" id="pill-1"><input type="checkbox" value="Tendinite achille" onchange="syncPill('pill-1',this)"> Tendinite achille</label>
-            <label class="pill" id="pill-2"><input type="checkbox" value="Syndrome rotulien" onchange="syncPill('pill-2',this)"> Rotule</label>
-            <label class="pill" id="pill-3"><input type="checkbox" value="Périostite tibiale" onchange="syncPill('pill-3',this)"> Périostite</label>
-            <label class="pill" id="pill-4"><input type="checkbox" value="Fasciite plantaire" onchange="syncPill('pill-4',this)"> Fasciite</label>
-            <label class="pill" id="pill-5"><input type="checkbox" value="Lombalgie" onchange="syncPill('pill-5',this)"> Lombalgie</label>
-            <label class="pill" id="pill-6"><input type="checkbox" value="Entorse cheville" onchange="syncPill('pill-6',this)"> Cheville</label>
-            <label class="pill" id="pill-7"><input type="checkbox" value="Problème cardiaque suivi" onchange="syncPill('pill-7',this)"> Cardiaque</label>
-            <label class="pill" id="pill-8"><input type="checkbox" value="Asthme à l'effort" onchange="syncPill('pill-8',this)"> Asthme</label>
-            <label class="pill" id="pill-9"><input type="checkbox" value="Surpoids / reprise progressive" onchange="syncPill('pill-9',this)"> Reprise</label>
-            <label class="pill" id="pill-10"><input type="checkbox" value="Hernie discale" onchange="syncPill('pill-10',this)"> Hernie disc.</label>
-            <label class="pill" id="pill-11"><input type="checkbox" value="Syndrome de loge" onchange="syncPill('pill-11',this)"> Compartiment</label>
           </div>
         </div>
 
-        <div class="field-group">
-          <div class="field-label-row">
-            Précisions médicales
-            <span class="opt-tag">optionnel</span>
+        <!-- VMA Section -->
+        <div class="section-block">
+          <div class="section-label">VMA — VITESSE MAXIMALE AÉROBIE <span class="opt-tag">optionnel</span></div>
+          <div class="vma-row">
+            <div class="vma-input-wrap">
+              <input type="number" id="vma" class="ke-input" placeholder="ex : 14.5 km/h" min="8" max="25" step="0.1" oninput="validateVMA(this); checkValidity()">
+              <p class="field-error" id="vmaErr" style="display:none">⚠ VMA entre 8 et 25 km/h</p>
+              <p class="param-hint">Permet des allures précises · sinon allures relatives</p>
+            </div>
+            <div class="vma-calc-box">
+              <button type="button" class="vcb-toggle" onclick="toggleVMACalc()">
+                <span>🧮 Calculer depuis un chrono récent</span>
+                <span class="vcb-arrow" id="vcbArrow">▾</span>
+              </button>
+              <div class="vcb-body" id="vcbBody" style="display:none">
+                <div class="calc-inline">
+                  <select id="calcDist" class="ke-select ke-select-sm">
+                    <option value="1.5">1 500 m</option>
+                    <option value="3">3 000 m</option>
+                    <option value="5" selected>5 km</option>
+                    <option value="10">10 km</option>
+                  </select>
+                  <input type="text" id="calcTime" class="ke-input ke-input-sm" placeholder="25:30" maxlength="5" oninput="maskTimeShort(this)">
+                  <button type="button" class="btn-calc-vma" onclick="calcVMA()">Estimer</button>
+                </div>
+                <div class="vma-result" id="vmaResult" style="display:none"></div>
+              </div>
+            </div>
           </div>
-          <textarea id="injuriesDetail" class="dark-textarea" placeholder="Ex : reprise après fracture de fatigue il y a 3 mois, suivi kiné hebdomadaire…"></textarea>
+        </div>
+      </section>
+
+      <!-- ═══ STEP 3 – Options / Health ═══ -->
+      <section class="wizard-step" id="step-3" style="display:none">
+        <div class="step-hero">
+          <div class="step-eyebrow">STEP 03 — CONFIGURATION</div>
+          <h1 class="step-display">Health Optimization</h1>
+          <p class="step-lead">Tailor your kinetic engine. Select any physiological constraints to ensure your generated performance plan remains sustainable.</p>
         </div>
 
-        <!-- Method -->
-        <div class="field-group">
-          <div class="field-label-row">Méthode d'entraînement</div>
-          <select id="planStyle" class="dark-select" onchange="updateStyleHint()">
-            <option value="Classique FFA">📋 Classique FFA</option>
-            <option value="80/20 Polarisé">🎯 80/20 Polarisé</option>
-            <option value="Lydiard">🏔 Lydiard</option>
-            <option value="HIIT Intensif">⚡ HIIT Intensif</option>
-            <option value="Progressif doux">🌱 Progressif Doux</option>
-          </select>
-          <p class="field-hint" id="styleHint"></p>
-        </div>
+        <div class="options-layout">
 
-        <!-- Model -->
-        <div class="field-group">
-          <div class="field-label-row">Modèle Claude</div>
-          <select id="apiModel" class="dark-select">
-            <option value="claude-opus-4-6">Claude Opus 4.6 · Le plus puissant</option>
-            <option value="claude-sonnet-4-6" selected>Claude Sonnet 4.6 · Recommandé ✓</option>
-            <option value="claude-haiku-4-5-20251001">Claude Haiku 4.5 · Rapide &amp; économique</option>
-            <option value="claude-3-5-sonnet-20241022">Claude 3.5 Sonnet · Précédente génération</option>
-            <option value="claude-3-5-haiku-20241022">Claude 3.5 Haiku · Précédente génération</option>
-          </select>
-        </div>
+          <!-- Left column -->
+          <div class="options-main">
 
-        <!-- Detail level -->
-        <div class="field-group">
-          <div class="field-label-row">Niveau de détail du plan</div>
-          <select id="detailLevel" class="dark-select">
-            <option value="concis">Concis – type + durée</option>
-            <option value="standard">Standard – éch. + cœur + récup</option>
-            <option value="detaille" selected>Détaillé – allures + séquences complètes</option>
-          </select>
+            <div class="section-block">
+              <div class="section-label">PHYSIOLOGICAL CONSTRAINTS</div>
+              <div class="constraints-grid" id="pillsGroup">
+                <label class="constraint-card pill" id="pill-1">
+                  <input type="checkbox" value="Tendinite achille" onchange="syncPill('pill-1',this)">
+                  <div class="cc-body">
+                    <div class="cc-name">Achilles Tendon</div>
+                    <div class="cc-desc">Preventative loading focus</div>
+                  </div>
+                  <div class="cc-check-mark">✓</div>
+                </label>
+                <label class="constraint-card pill" id="pill-2">
+                  <input type="checkbox" value="Syndrome rotulien" onchange="syncPill('pill-2',this)">
+                  <div class="cc-body">
+                    <div class="cc-name">Knee Sensitivity</div>
+                    <div class="cc-desc">Low-impact phase integration</div>
+                  </div>
+                  <div class="cc-check-mark">✓</div>
+                </label>
+                <label class="constraint-card pill" id="pill-3">
+                  <input type="checkbox" value="Périostite tibiale" onchange="syncPill('pill-3',this)">
+                  <div class="cc-body">
+                    <div class="cc-name">Lower Back</div>
+                    <div class="cc-desc">Core-stability emphasis</div>
+                  </div>
+                  <div class="cc-check-mark">✓</div>
+                </label>
+                <label class="constraint-card pill" id="pill-4">
+                  <input type="checkbox" value="Fasciite plantaire" onchange="syncPill('pill-4',this)">
+                  <div class="cc-body">
+                    <div class="cc-name">Plantar Fasciitis</div>
+                    <div class="cc-desc">Footwear &amp; surface warnings</div>
+                  </div>
+                  <div class="cc-check-mark">✓</div>
+                </label>
+                <label class="constraint-card pill" id="pill-5">
+                  <input type="checkbox" value="Lombalgie" onchange="syncPill('pill-5',this)">
+                  <div class="cc-body">
+                    <div class="cc-name">Lombalgie</div>
+                    <div class="cc-desc">Renforcement core progressif</div>
+                  </div>
+                  <div class="cc-check-mark">✓</div>
+                </label>
+                <label class="constraint-card pill" id="pill-6">
+                  <input type="checkbox" value="Entorse cheville" onchange="syncPill('pill-6',this)">
+                  <div class="cc-body">
+                    <div class="cc-name">Cheville</div>
+                    <div class="cc-desc">Proprioception &amp; stabilisation</div>
+                  </div>
+                  <div class="cc-check-mark">✓</div>
+                </label>
+                <label class="constraint-card pill" id="pill-7">
+                  <input type="checkbox" value="Problème cardiaque suivi" onchange="syncPill('pill-7',this)">
+                  <div class="cc-body">
+                    <div class="cc-name">Cardiaque</div>
+                    <div class="cc-desc">Suivi médical intégré</div>
+                  </div>
+                  <div class="cc-check-mark">✓</div>
+                </label>
+                <label class="constraint-card pill" id="pill-8">
+                  <input type="checkbox" value="Asthme à l'effort" onchange="syncPill('pill-8',this)">
+                  <div class="cc-body">
+                    <div class="cc-name">Asthme</div>
+                    <div class="cc-desc">Gestion de l'intensité</div>
+                  </div>
+                  <div class="cc-check-mark">✓</div>
+                </label>
+                <label class="constraint-card pill" id="pill-9">
+                  <input type="checkbox" value="Surpoids / reprise progressive" onchange="syncPill('pill-9',this)">
+                  <div class="cc-body">
+                    <div class="cc-name">Reprise</div>
+                    <div class="cc-desc">Progression ultra-douce</div>
+                  </div>
+                  <div class="cc-check-mark">✓</div>
+                </label>
+                <label class="constraint-card pill" id="pill-10">
+                  <input type="checkbox" value="Hernie discale" onchange="syncPill('pill-10',this)">
+                  <div class="cc-body">
+                    <div class="cc-name">Hernie disc.</div>
+                    <div class="cc-desc">Charge vertébrale contrôlée</div>
+                  </div>
+                  <div class="cc-check-mark">✓</div>
+                </label>
+                <label class="constraint-card pill" id="pill-11">
+                  <input type="checkbox" value="Syndrome de loge" onchange="syncPill('pill-11',this)">
+                  <div class="cc-body">
+                    <div class="cc-name">Compartiment</div>
+                    <div class="cc-desc">Volume d'intensité contrôlé</div>
+                  </div>
+                  <div class="cc-check-mark">✓</div>
+                </label>
+              </div>
+              <textarea id="injuriesDetail" class="ke-textarea" placeholder="Précisions médicales (optionnel) — Ex : reprise après fracture de fatigue il y a 3 mois, suivi kiné hebdomadaire…"></textarea>
+            </div>
+
+            <!-- Neural Engine -->
+            <div class="section-block neural-section">
+              <div class="neural-header">
+                <span class="neural-icon">◈</span>
+                <h3 class="neural-title">Neural Engine Integration</h3>
+              </div>
+              <p class="neural-desc">Enter your Anthropic API key to unlock the Kinetic AI engine. Your data is processed locally and never stored on our servers.</p>
+
+              <div class="pw-wrap">
+                <input type="password" id="apiKey" class="ke-input" placeholder="sk-ant-xxxxxxxxxxxxxxxx" autocomplete="off" oninput="checkValidity()">
+                <button type="button" class="btn-toggle-pw" onclick="togglePw()" title="Afficher / Masquer">👁</button>
+              </div>
+              <p class="param-hint" style="margin:8px 0 20px">Non stockée · utilisée uniquement pour api.anthropic.com</p>
+
+              <div class="engine-options">
+                <div class="engine-opt">
+                  <label class="param-label">Modèle Claude</label>
+                  <select id="apiModel" class="ke-select">
+                    <option value="claude-opus-4-6">Claude Opus 4.6 · Le plus puissant</option>
+                    <option value="claude-sonnet-4-6" selected>Claude Sonnet 4.6 · Recommandé ✓</option>
+                    <option value="claude-haiku-4-5-20251001">Claude Haiku 4.5 · Rapide &amp; économique</option>
+                    <option value="claude-3-5-sonnet-20241022">Claude 3.5 Sonnet · Précédente génération</option>
+                    <option value="claude-3-5-haiku-20241022">Claude 3.5 Haiku · Précédente génération</option>
+                  </select>
+                </div>
+                <div class="engine-opt">
+                  <label class="param-label">Méthode d'entraînement</label>
+                  <select id="planStyle" class="ke-select" onchange="updateStyleHint()">
+                    <option value="Classique FFA">📋 Classique FFA</option>
+                    <option value="80/20 Polarisé">🎯 80/20 Polarisé</option>
+                    <option value="Lydiard">🏔 Lydiard</option>
+                    <option value="HIIT Intensif">⚡ HIIT Intensif</option>
+                    <option value="Progressif doux">🌱 Progressif Doux</option>
+                  </select>
+                  <p class="param-hint" id="styleHint"></p>
+                </div>
+                <div class="engine-opt">
+                  <label class="param-label">Niveau de détail</label>
+                  <select id="detailLevel" class="ke-select">
+                    <option value="concis">Concis – type + durée</option>
+                    <option value="standard">Standard – éch. + cœur + récup</option>
+                    <option value="detaille" selected>Détaillé – allures + séquences complètes</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- /options-main -->
+
+          <!-- Right column: Plan Summary -->
+          <div class="options-sidebar">
+            <div class="plan-summary-card">
+              <h3 class="ps-title">Plan Summary</h3>
+              <div class="ps-row">
+                <span class="ps-label">Duration</span>
+                <span class="ps-value" id="psDuration">— Weeks</span>
+              </div>
+              <div class="ps-row">
+                <span class="ps-label">Intensity</span>
+                <span class="ps-value ps-accent" id="psLevel">—</span>
+              </div>
+              <div class="ps-row">
+                <span class="ps-label">Target Pace</span>
+                <span class="ps-value ps-italic" id="psTargetPace">—</span>
+              </div>
+              <button class="btn-generate" id="btnGenerate" onclick="generatePlan()" disabled>
+                <span id="btnLabel">GENERATE MY PLAN</span>
+                <span class="btn-gen-icon">⚡</span>
+              </button>
+              <p class="gen-hint" id="genHint">⚡ Génération IA · 15 à 60 sec</p>
+            </div>
+          </div>
+
+        </div><!-- /options-layout -->
+      </section>
+
+      <!-- Welcome state (hidden – kept for JS compat) -->
+      <div id="welcomeState" style="display:none"></div>
+
+      <!-- Loading State -->
+      <div class="loading-state" id="loadingState" style="display:none">
+        <div class="loading-runner">🏃‍♂️</div>
+        <div class="spinner"></div>
+        <h3 class="loading-title">Génération de votre plan…</h3>
+        <p class="loading-sub">Claude analyse votre profil et construit votre programme</p>
+        <div class="progress-track">
+          <div class="progress-fill" id="progressFill"></div>
         </div>
       </div>
 
-    </div><!-- /steps-container -->
-
-    <!-- Step navigation (Prev / Dots / Next) -->
-    <div class="step-nav">
-      <button type="button" class="btn-step btn-step-prev" id="btnPrev" onclick="prevStep()" style="visibility:hidden">
-        ← Retour
-      </button>
-      <div class="step-dots">
-        <div class="sdot active" id="dot-1"></div>
-        <div class="sdot" id="dot-2"></div>
-        <div class="sdot" id="dot-3"></div>
+      <!-- Error Banner -->
+      <div class="error-banner" id="errorBox" style="display:none">
+        <div class="error-content">
+          <span class="error-icon">⚠️</span>
+          <div class="error-text-block">
+            <strong class="error-title">Erreur lors de la génération</strong>
+            <p id="errorMsg" class="error-msg"></p>
+          </div>
+        </div>
+        <button class="error-close" onclick="document.getElementById('errorBox').style.display='none'">✕</button>
       </div>
-      <button type="button" class="btn-step btn-step-next" id="btnNext" onclick="nextStep()">
-        Suivant →
-      </button>
-    </div>
 
-    <!-- Generate area (always visible) -->
-    <div class="gen-area">
-      <div class="api-row">
-        <span class="api-label">🔑 Clé API Anthropic</span>
-        <span class="api-hint-inline">console.anthropic.com → API Keys</span>
-      </div>
-      <div class="pw-wrap">
-        <input type="password" id="apiKey" class="dark-input" placeholder="sk-ant-xxxxxxxxxxxxxxxx" autocomplete="off" oninput="checkValidity()">
-        <button type="button" class="btn-toggle-pw" onclick="togglePw()" title="Afficher / Masquer">👁</button>
-      </div>
-      <p class="field-hint" style="margin:5px 0 12px">Non stockée · utilisée uniquement pour api.anthropic.com</p>
+      <!-- Plan Container -->
+      <div id="planContainer" style="display:none">
 
-      <button class="btn-generate" id="btnGenerate" onclick="generatePlan()" disabled>
-        <span class="btn-icon">✨</span>
-        <span id="btnLabel">Générer mon plan d'entraînement</span>
-      </button>
-      <p class="gen-hint" id="genHint">⚡ Génération IA · 15 à 60 sec selon la durée du plan</p>
-    </div>
-
-  </aside><!-- /left-panel -->
-
-  <!-- ═══════════════════════════════════════
-       RIGHT STAGE
-  ═══════════════════════════════════════ -->
-  <main class="right-stage">
-
-    <!-- Welcome State -->
-    <div class="welcome-state" id="welcomeState">
-      <div class="welcome-icon">🏃‍♂️</div>
-      <h2 class="welcome-title">Prêt(e) à vous lancer ?</h2>
-      <p class="welcome-sub">Remplissez le formulaire à gauche, entrez votre clé API Anthropic, puis cliquez sur <strong>Générer</strong>.</p>
-      <div class="feature-grid">
-        <div class="feature-card">
-          <span class="fc-icon">📊</span>
-          <span class="fc-label">Volume km/semaine</span>
-        </div>
-        <div class="feature-card">
-          <span class="fc-icon">🔄</span>
-          <span class="fc-label">Régénérer une semaine</span>
-        </div>
-        <div class="feature-card">
-          <span class="fc-icon">📏</span>
-          <span class="fc-label">Allures VMA précises</span>
-        </div>
-        <div class="feature-card">
-          <span class="fc-icon">🎯</span>
-          <span class="fc-label">5 styles de plan</span>
-        </div>
-        <div class="feature-card">
-          <span class="fc-icon">📥</span>
-          <span class="fc-label">Export CSV</span>
-        </div>
-        <div class="feature-card">
-          <span class="fc-icon">🖨</span>
-          <span class="fc-label">Impression PDF A3</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Loading State -->
-    <div class="loading-state" id="loadingState">
-      <div class="loading-runner">🏃‍♂️</div>
-      <div class="spinner"></div>
-      <h3 class="loading-title">Génération de votre plan…</h3>
-      <p class="loading-sub">Claude analyse votre profil et construit votre programme</p>
-      <div class="progress-track">
-        <div class="progress-fill" id="progressFill"></div>
-      </div>
-    </div>
-
-    <!-- Error Banner -->
-    <div class="error-banner" id="errorBox">
-      <div class="error-content">
-        <span class="error-icon">⚠️</span>
-        <div class="error-text-block">
-          <strong class="error-title">Erreur lors de la génération</strong>
-          <p id="errorMsg" class="error-msg"></p>
-        </div>
-      </div>
-      <button class="error-close" onclick="document.getElementById('errorBox').style.display='none'">✕</button>
-    </div>
-
-    <!-- Plan Container -->
-    <div id="planContainer">
-
-      <!-- Sticky Topbar -->
-      <div class="plan-topbar">
-        <div class="plan-title-area">
-          <h2 class="plan-main-title" id="planMainTitle">Plan d'entraînement</h2>
+        <div class="plan-header-section">
+          <div class="plan-track-label">PROFESSIONAL TRACK</div>
+          <h1 class="plan-main-title" id="planMainTitle">Plan d'entraînement</h1>
           <p class="plan-subtitle" id="planSubtitle"></p>
+          <div class="plan-actions">
+            <button class="btn-action" onclick="exportCSV()">
+              <span>📥</span> Export CSV
+            </button>
+            <button class="btn-action" onclick="printPlan()">
+              <span>🖨</span> Print PDF
+            </button>
+            <button class="btn-action" onclick="openGlossary()">
+              <span>📖</span> Glossary
+            </button>
+            <button class="btn-action btn-action-primary" onclick="resetPlan()">
+              <span>+</span> New Plan
+            </button>
+          </div>
         </div>
-        <div class="plan-actions">
-          <button class="btn-action btn-glossary" onclick="openGlossary()">📖 Glossaire</button>
-          <button class="btn-action btn-csv"      onclick="exportCSV()">📥 CSV</button>
-          <button class="btn-action btn-reset"    onclick="resetPlan()">↩ Nouveau</button>
-          <button class="btn-action btn-pdf"      onclick="printPlan()">🖨 PDF A3</button>
+
+        <!-- Stats Bar -->
+        <div class="plan-stats-bar" id="planStatsBar"></div>
+
+        <!-- Table -->
+        <div class="plan-table-wrap">
+          <table class="plan-table" id="planTable">
+            <thead>
+              <tr>
+                <th class="th-week">Semaine</th>
+                <th>Lundi</th>
+                <th>Mardi</th>
+                <th>Mercredi</th>
+                <th>Jeudi</th>
+                <th>Vendredi</th>
+                <th class="th-weekend">Samedi</th>
+                <th class="th-weekend">Dimanche</th>
+              </tr>
+            </thead>
+            <tbody id="planBody"></tbody>
+          </table>
         </div>
-      </div>
 
-      <!-- Table -->
-      <div class="plan-table-wrap">
-        <table class="plan-table" id="planTable">
-          <thead>
-            <tr>
-              <th class="th-week">Semaine</th>
-              <th>Lundi</th>
-              <th>Mardi</th>
-              <th>Mercredi</th>
-              <th>Jeudi</th>
-              <th>Vendredi</th>
-              <th class="th-weekend">Samedi</th>
-              <th class="th-weekend">Dimanche</th>
-            </tr>
-          </thead>
-          <tbody id="planBody"></tbody>
-        </table>
-      </div>
-
-      <!-- Legend -->
-      <div class="legend-bar">
-        <h4 class="legend-title">Légende des types de séances</h4>
-        <div class="legend-items">
-          <div class="legend-item"><div class="legend-dot" style="background:#fde8f3;border-color:#f773b4;"></div>EF – Endurance Fond.</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#f7bfd9;border-color:#f773b4;"></div>SL – Sortie Longue</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#f773b4;"></div>VMA – Intervalles</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#fbd0e8;border-color:#f773b4;"></div>Seuil</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#000;"></div>PPG – Renforcement</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#fce4f1;border-color:#f773b4;"></div>Récup</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#fff;border-color:#ddd;"></div>Repos</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#f773b4;border:2px solid #000;border-radius:50%;"></div>🏁 Course</div>
+        <!-- Legend -->
+        <div class="legend-bar">
+          <h4 class="legend-title">Légende des types de séances</h4>
+          <div class="legend-items">
+            <div class="legend-item"><div class="legend-dot ld-ef"></div>EF – Endurance</div>
+            <div class="legend-item"><div class="legend-dot ld-sl"></div>SL – Sortie Longue</div>
+            <div class="legend-item"><div class="legend-dot ld-vma"></div>VMA – Intervalles</div>
+            <div class="legend-item"><div class="legend-dot ld-seuil"></div>Seuil</div>
+            <div class="legend-item"><div class="legend-dot ld-ppg"></div>PPG – Renforcement</div>
+            <div class="legend-item"><div class="legend-dot ld-recup"></div>Récup</div>
+            <div class="legend-item"><div class="legend-dot ld-repos"></div>Repos</div>
+            <div class="legend-item"><div class="legend-dot ld-course"></div>🏁 Course</div>
+          </div>
         </div>
+
+      </div><!-- /planContainer -->
+
+    </div><!-- /content-area -->
+
+    <!-- BOTTOM BAR -->
+    <footer class="bottom-bar" id="bottomBar">
+      <div class="bottom-left">
+        <div class="step-dots-row">
+          <div class="spl-dot active" id="dot-1"></div>
+          <div class="spl-dot" id="dot-2"></div>
+          <div class="spl-dot" id="dot-3"></div>
+        </div>
+        <span class="step-indicator-text" id="stepIndicator">STEP 01 OF 03</span>
       </div>
+      <div class="bottom-right">
+        <button type="button" class="btn-phase btn-phase-prev" id="btnPrev" onclick="prevStep()" style="visibility:hidden">← PREV</button>
+        <button type="button" class="btn-phase btn-phase-next" id="btnNext" onclick="nextStep()">NEXT PHASE →</button>
+      </div>
+    </footer>
 
-    </div><!-- /planContainer -->
-
-  </main><!-- /right-stage -->
+  </main>
 
 </div><!-- /app-layout -->
 
-<!-- ═══════════════════════════════════════
-     MODAL – Glossaire
-═══════════════════════════════════════ -->
+<!-- ═══ MODAL – Glossaire ═══ -->
 <div class="modal-overlay" id="modalGlossary" onclick="overlayClose(event,'modalGlossary')">
   <div class="modal-box">
     <button class="modal-close" onclick="closeModal('modalGlossary')">✕</button>
-    <h3 class="modal-title">📖 Glossaire Running – Acronymes &amp; Définitions</h3>
+    <h3 class="modal-title">📖 Glossaire Running — Acronymes &amp; Définitions</h3>
     <table class="gloss-table">
       <tr><td>EF</td><td>Endurance Fondamentale</td><td>Allure de base, conversation possible. 60-70% FCM. Socle de tout plan.</td></tr>
       <tr><td>SL</td><td>Sortie Longue</td><td>Séance longue (&gt;1h) en EF. Développe l'endurance aérobie et la résistance à la fatigue.</td></tr>
@@ -494,20 +585,18 @@
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════
-     MODAL – Regen
-═══════════════════════════════════════ -->
+<!-- ═══ MODAL – Regen ═══ -->
 <div class="modal-overlay" id="modalRegen" onclick="overlayClose(event,'modalRegen')">
   <div class="modal-box modal-box-sm">
     <button class="modal-close" onclick="closeModal('modalRegen')">✕</button>
     <h3 class="modal-title">🔄 Régénérer la semaine <span id="regenWeekNum"></span></h3>
     <p class="modal-desc">Donnez une consigne spécifique ou laissez vide pour une régénération standard.</p>
-    <div class="field-group">
-      <label class="field-label-row" style="color:#333;">Consigne spéciale <span class="opt-tag" style="background:#f7bfd9;border-color:#f773b4;color:#c94090">optionnel</span></label>
-      <textarea id="regenNote" placeholder="Ex : j'ai un voyage ce weekend, pas de sortie longue. Ou : augmenter l'intensité…" style="border:1.5px solid #f7bfd9;border-radius:8px;width:100%;padding:9px 11px;font-size:12px;resize:vertical;min-height:70px;font-family:inherit;background:#fff;color:#000;outline:none;transition:border-color .15s;" onfocus="this.style.borderColor='#f773b4'" onblur="this.style.borderColor='#f7bfd9'"></textarea>
+    <div style="margin-top:16px">
+      <label class="param-label">Consigne spéciale <span class="opt-tag">optionnel</span></label>
+      <textarea id="regenNote" class="ke-textarea" placeholder="Ex : j'ai un voyage ce weekend, pas de sortie longue. Ou : augmenter l'intensité…"></textarea>
     </div>
     <button class="btn-generate-modal" onclick="confirmRegen()">
-      <span>🔄</span> Régénérer cette semaine
+      🔄 Régénérer cette semaine
     </button>
   </div>
 </div>

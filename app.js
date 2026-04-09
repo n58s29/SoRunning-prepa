@@ -295,6 +295,7 @@ function checkValidity() {
   }
 
   document.getElementById('btnGenerate').disabled = missing.length > 0;
+  updatePlanSummary();
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -568,7 +569,14 @@ function renderWeekRow(week, tbody) {
 function generatePlan() {
   _currentData = collectData();
 
-  document.getElementById('welcomeState').style.display  = 'none';
+  // Hide all steps + bottom bar
+  for (var i = 1; i <= TOTAL_STEPS; i++) {
+    var s = document.getElementById('step-' + i);
+    if (s) s.style.display = 'none';
+  }
+  var bb = document.getElementById('bottomBar');
+  if (bb) bb.style.display = 'none';
+
   document.getElementById('planContainer').style.display = 'none';
   document.getElementById('errorBox').style.display      = 'none';
   document.getElementById('loadingState').style.display  = 'flex';
@@ -586,17 +594,16 @@ function generatePlan() {
       try {
         _currentPlan = parseResponse(raw);
         document.getElementById('planMainTitle').textContent =
-          _currentPlan.planTitle || ('Plan ' + _currentData.raceType + ' ' + _currentData.distance);
+          _currentPlan.planTitle || ('Plan ' + _currentData.raceType + ' — ' + _currentData.distance);
         document.getElementById('planSubtitle').textContent =
-          _currentPlan.totalWeeks + ' sem. · '
-          + _currentData.sessionsPerWeek + ' séances/sem · '
-          + _currentData.level + ' · '
-          + _currentData.planStyle
-          + (_currentData.vma ? ' · VMA ' + _currentData.vma + ' km/h' : '');
+          'A ' + (_currentData.planStyle || 'Classique') + ' protocol for '
+          + _currentData.raceType + ' ' + _currentData.distance
+          + '. Focuses on ' + _currentData.level.toLowerCase() + ' performance development.';
         renderTable(_currentPlan);
+        renderStatsBar(_currentPlan, _currentData);
         document.getElementById('planContainer').style.display = 'block';
         document.getElementById('btnGenerate').disabled = false;
-        document.getElementById('btnLabel').textContent = 'Régénérer le plan';
+        document.getElementById('btnLabel').textContent = 'GENERATE MY PLAN';
       } catch (e) {
         showError('Erreur parsing : ' + e.message);
       }
@@ -821,19 +828,92 @@ function stopProgress() {
 // ERROR & RESET
 // ══════════════════════════════════════════════════════════════
 function showError(msg) {
-  document.getElementById('errorMsg').textContent         = msg;
-  document.getElementById('errorBox').style.display       = 'flex';
-  document.getElementById('welcomeState').style.display   = 'flex';
-  document.getElementById('btnGenerate').disabled         = false;
-  document.getElementById('btnLabel').textContent         = 'Générer mon plan';
+  document.getElementById('errorMsg').textContent   = msg;
+  document.getElementById('errorBox').style.display = 'flex';
+  document.getElementById('btnGenerate').disabled   = false;
+  document.getElementById('btnLabel').textContent   = 'GENERATE MY PLAN';
+  // Show the step where the user was
+  goToStep(_currentStep);
 }
 
 function resetPlan() {
   _currentPlan = null;
   document.getElementById('planContainer').style.display = 'none';
   document.getElementById('errorBox').style.display      = 'none';
-  document.getElementById('welcomeState').style.display  = 'flex';
-  document.getElementById('btnLabel').textContent        = 'Générer mon plan d\'entraînement';
+  document.getElementById('btnLabel').textContent        = 'GENERATE MY PLAN';
+  goToStep(1);
+}
+
+// ══════════════════════════════════════════════════════════════
+// PLAN STATS BAR
+// ══════════════════════════════════════════════════════════════
+function renderStatsBar(plan, data) {
+  var bar = document.getElementById('planStatsBar');
+  if (!bar) return;
+
+  // Calculate total volume
+  var totalVol = 0;
+  if (plan.weeks) {
+    plan.weeks.forEach(function (w) {
+      var vol = w.weeklyVolume || '';
+      var m = vol.match(/\d+/);
+      if (m) totalVol += parseInt(m[0], 10);
+    });
+  }
+
+  // Build intensity label from planStyle
+  var intensityMap = {
+    'Classique FFA':   'Zone 3-4 Priority',
+    '80/20 Polarisé':  'Zone 2 & 5 Split',
+    'Lydiard':         'Aerobic Base',
+    'HIIT Intensif':   'Zone 4-5 Priority',
+    'Progressif doux': 'Zone 1-2 Focus'
+  };
+  var intensity = intensityMap[data.planStyle] || data.planStyle || '—';
+
+  // Level → difficulty
+  var diffMap = { 'Débutant': 'Fondation', 'Intermédiaire': 'Développement', 'Confirmé': 'Avancé', 'Expert': 'Elite' };
+  var diff = diffMap[data.level] || data.level || '—';
+
+  // Target pace from VMA
+  var pace = data.vma ? (vmaToAllure(data.vma, 0.88) + ' min/km') : (data.targetTime || '—');
+
+  bar.innerHTML =
+    '<div class="stat-item"><div class="stat-label">Total Volume</div><div class="stat-value">' + (totalVol > 0 ? totalVol : '—') + '<span class="stat-unit">KM</span></div></div>' +
+    '<div class="stat-item"><div class="stat-label">Intensities</div><div class="stat-value" style="font-size:16px">' + escHtml(intensity) + '</div></div>' +
+    '<div class="stat-item"><div class="stat-label">Plan Difficulty</div><div class="stat-value">' + escHtml(diff) + '<span class="stat-unit">' + escHtml(data.level || '') + '</span></div></div>' +
+    '<div class="stat-item"><div class="stat-label">Target Pace</div><div class="stat-value">' + escHtml(pace) + '</div></div>';
+}
+
+// ── Plan Summary Card (Step 3 sidebar) ──────────────────────
+function updatePlanSummary() {
+  var dur  = document.getElementById('psDuration');
+  var lev  = document.getElementById('psLevel');
+  var pace = document.getElementById('psTargetPace');
+  if (!dur) return;
+
+  // Duration from weeks badge
+  var dateVal  = document.getElementById('raceDate') ? document.getElementById('raceDate').value : '';
+  var distVal  = document.getElementById('distance') ? document.getElementById('distance').value : '';
+  var weeks    = '— Weeks';
+  if (dateVal && distVal) {
+    var race  = parseLocalDate(dateVal);
+    var today = new Date(); today.setHours(0,0,0,0);
+    if (race && !isNaN(race) && race > today) {
+      var w = Math.min(Math.ceil((race - today) / 604800000), getMaxWeeks());
+      weeks  = w + ' Weeks';
+    }
+  }
+  if (dur) dur.textContent = weeks;
+
+  // Level
+  var levelVal = document.getElementById('level') ? document.getElementById('level').value : '';
+  if (lev) lev.textContent = levelVal || '—';
+
+  // Pace
+  var vmaVal = document.getElementById('vma') ? document.getElementById('vma').value : '';
+  var ttVal  = document.getElementById('targetTime') ? document.getElementById('targetTime').value : '';
+  if (pace) pace.textContent = vmaVal ? vmaToAllure(vmaVal, 0.88) + ' min/km' : (ttVal || '—');
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -860,37 +940,50 @@ var TOTAL_STEPS  = 3;
 function goToStep(n) {
   if (n < 1 || n > TOTAL_STEPS) return;
 
+  // Hide all steps, clear nav dots
   for (var i = 1; i <= TOTAL_STEPS; i++) {
     var s   = document.getElementById('step-' + i);
-    var wn  = document.getElementById('wn-' + i);
     var dot = document.getElementById('dot-' + i);
+    var nav = document.getElementById('nav-' + i);
     if (s)   s.style.display = 'none';
-    if (wn)  { wn.classList.remove('active', 'done'); }
     if (dot) dot.classList.remove('active');
+    if (nav) nav.classList.remove('active');
   }
 
+  // Show target step
   var target = document.getElementById('step-' + n);
   if (target) target.style.display = 'block';
 
-  for (var j = 1; j <= TOTAL_STEPS; j++) {
-    var wnj  = document.getElementById('wn-' + j);
-    var dotj = document.getElementById('dot-' + j);
-    if (j < n  && wnj)  wnj.classList.add('done');
-    if (j === n) {
-      if (wnj)  wnj.classList.add('active');
-      if (dotj) dotj.classList.add('active');
-    }
-  }
+  // Activate dot + sidebar nav + top nav
+  var activeDot  = document.getElementById('dot-' + n);
+  var activeNav  = document.getElementById('nav-' + n);
+  var activeTop  = document.getElementById('tnav-' + n);
+  if (activeDot) activeDot.classList.add('active');
+  if (activeNav) activeNav.classList.add('active');
+  // Reset top nav then activate matching item
+  document.querySelectorAll('.top-nav-item').forEach(function(el){ el.classList.remove('active'); });
+  if (activeTop) activeTop.classList.add('active');
 
+  // Update step indicator text
+  var indicator = document.getElementById('stepIndicator');
+  if (indicator) indicator.textContent = 'STEP 0' + n + ' OF 0' + TOTAL_STEPS;
+
+  // Show/hide prev-next buttons
   var prev = document.getElementById('btnPrev');
   var next = document.getElementById('btnNext');
   if (prev) prev.style.visibility = (n > 1) ? 'visible' : 'hidden';
   if (next) next.style.visibility = (n < TOTAL_STEPS) ? 'visible' : 'hidden';
 
-  var sc = document.querySelector('.steps-container');
-  if (sc) sc.scrollTop = 0;
+  // Show bottom bar (hidden when plan is displayed)
+  var bb = document.getElementById('bottomBar');
+  if (bb) bb.style.display = 'flex';
+
+  // Scroll content area to top
+  var ca = document.getElementById('contentArea');
+  if (ca) ca.scrollTop = 0;
 
   _currentStep = n;
+  updatePlanSummary();
 }
 
 function nextStep() { goToStep(_currentStep + 1); }
@@ -900,7 +993,7 @@ function prevStep() { goToStep(_currentStep - 1); }
 // VISUAL CARD SELECTORS
 // ══════════════════════════════════════════════════════════════
 function selectRaceType(el) {
-  document.querySelectorAll('.race-card').forEach(function (c) { c.classList.remove('selected'); });
+  document.querySelectorAll('.terrain-card').forEach(function (c) { c.classList.remove('selected'); });
   el.classList.add('selected');
 
   var sel = document.getElementById('raceType');
