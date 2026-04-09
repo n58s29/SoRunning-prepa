@@ -83,7 +83,14 @@
             </div>
           </div>
           <!-- Hidden select (JS compat) -->
-          <select id="raceType" style="display:none" onchange="updateDistances(); checkValidity()"></select>
+          <select id="raceType" style="display:none" onchange="updateDistances(); checkValidity()">
+            <option value="Route">Route</option>
+            <option value="Trail court">Trail court</option>
+            <option value="Trail long">Trail long</option>
+            <option value="Cross">Cross</option>
+            <option value="Piste">Piste</option>
+            <option value="Course à obstacles">Course à obstacles</option>
+          </select>
         </div>
 
         <!-- Distance -->
@@ -165,7 +172,13 @@
             <button type="button" class="seg-btn" data-val="5" onclick="selectSessions(this)">5</button>
             <button type="button" class="seg-btn" data-val="6" onclick="selectSessions(this)">6</button>
           </div>
-          <select id="sessionsPerWeek" style="display:none" onchange="checkValidity()"></select>
+          <select id="sessionsPerWeek" style="display:none" onchange="checkValidity()">
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+          </select>
         </div>
 
         <!-- KM per week slider -->
