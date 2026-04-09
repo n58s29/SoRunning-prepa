@@ -10,9 +10,9 @@
 
 <div class="app-layout">
 
-  <!-- ════════════════════════════════
-       LEFT PANEL (dark sidebar)
-  ════════════════════════════════ -->
+  <!-- ═══════════════════════════════════════
+       LEFT PANEL
+  ═══════════════════════════════════════ -->
   <aside class="left-panel">
 
     <!-- Brand Bar -->
@@ -25,118 +25,183 @@
       <span class="version-badge">v2.0</span>
     </div>
 
-    <!-- API Section -->
-    <div class="api-section">
-      <div class="api-section-title">
-        <span class="api-icon">🔑</span> Clé API Anthropic
+    <!-- Wizard Navigation -->
+    <div class="wizard-nav">
+      <div class="wn-step active" id="wn-1" onclick="goToStep(1)" title="La course cible">
+        <div class="wn-circle">1</div>
+        <div class="wn-label">Course</div>
       </div>
-      <div class="api-notice">
-        Obtenez votre clé sur <strong>console.anthropic.com</strong> → <strong>API Keys</strong>.<br>
-        Votre clé commence par <code>sk-ant-</code>.
+      <div class="wn-connector"></div>
+      <div class="wn-step" id="wn-2" onclick="goToStep(2)" title="Votre profil">
+        <div class="wn-circle">2</div>
+        <div class="wn-label">Profil</div>
       </div>
-      <div class="field-group">
-        <label class="field-label">Clé API</label>
-        <div class="pw-wrap">
-          <input type="password" id="apiKey" class="dark-input" placeholder="sk-ant-xxxxxxxxxxxxxxxx" autocomplete="off" oninput="checkValidity()">
-          <button class="btn-toggle-pw" onclick="togglePw()" title="Afficher / Masquer">👁</button>
-        </div>
-        <p class="field-hint">Non stockée · utilisée uniquement pour api.anthropic.com</p>
+      <div class="wn-connector"></div>
+      <div class="wn-step" id="wn-3" onclick="goToStep(3)" title="Santé & Options">
+        <div class="wn-circle">3</div>
+        <div class="wn-label">Options</div>
       </div>
     </div>
 
-    <!-- Scrollable accordion area -->
-    <div class="accordion-area">
+    <!-- Steps Content (scrollable) -->
+    <div class="steps-container">
 
-      <!-- Accordion 1 – La course cible -->
-      <div class="acc-section" id="acc-1">
-        <button class="acc-header open" onclick="toggleAcc('acc-1')">
-          <span class="acc-num">1</span>
-          <span class="acc-title">La course cible</span>
-          <span class="acc-arrow">▾</span>
-        </button>
-        <div class="acc-body">
-          <div class="form-row-2">
-            <div class="field-group">
-              <label class="field-label">Type</label>
-              <select id="raceType" class="dark-select" onchange="updateDistances(); checkValidity()">
-                <option value="">— Type —</option>
-                <option value="Route">🏙 Route</option>
-                <option value="Trail court">🌲 Trail court</option>
-                <option value="Trail long">⛰ Trail long</option>
-                <option value="Cross">❄ Cross</option>
-                <option value="Piste">🏟 Piste</option>
-                <option value="Course à obstacles">🧱 Obstacles</option>
-              </select>
+      <!-- ─── STEP 1 – La course cible ─── -->
+      <div class="step-content" id="step-1">
+        <div class="step-header">
+          <h3 class="step-title">La course cible</h3>
+          <p class="step-desc">Choisissez votre type de course et définissez votre objectif</p>
+        </div>
+
+        <!-- Race Type Cards -->
+        <div class="field-group">
+          <div class="field-label-row">Type de course <span class="req-star">*</span></div>
+          <div class="race-type-grid" id="raceTypeGrid">
+            <div class="race-card" data-val="Route" onclick="selectRaceType(this)">
+              <span class="rc-icon">🏙</span>
+              <span class="rc-label">Route</span>
             </div>
-            <div class="field-group">
-              <label class="field-label">Distance</label>
-              <select id="distance" class="dark-select" onchange="computeWeeks(); checkValidity()">
-                <option value="">— Dist. —</option>
-              </select>
+            <div class="race-card" data-val="Trail court" onclick="selectRaceType(this)">
+              <span class="rc-icon">🌲</span>
+              <span class="rc-label">Trail court</span>
+            </div>
+            <div class="race-card" data-val="Trail long" onclick="selectRaceType(this)">
+              <span class="rc-icon">⛰</span>
+              <span class="rc-label">Trail long</span>
+            </div>
+            <div class="race-card" data-val="Cross" onclick="selectRaceType(this)">
+              <span class="rc-icon">❄</span>
+              <span class="rc-label">Cross</span>
+            </div>
+            <div class="race-card" data-val="Piste" onclick="selectRaceType(this)">
+              <span class="rc-icon">🏟</span>
+              <span class="rc-label">Piste</span>
+            </div>
+            <div class="race-card" data-val="Course à obstacles" onclick="selectRaceType(this)">
+              <span class="rc-icon">🧱</span>
+              <span class="rc-label">Obstacles</span>
             </div>
           </div>
-          <div class="field-group">
-            <label class="field-label">Date de la course</label>
-            <input type="text" id="raceDate" class="dark-input" placeholder="JJ/MM/AAAA" maxlength="10" oninput="maskDate(this); computeWeeks(); checkValidity()">
-            <div class="weeks-badge" id="weeksBadge"></div>
+          <!-- Hidden select (JS compat) -->
+          <select id="raceType" style="display:none" onchange="updateDistances(); checkValidity()"></select>
+        </div>
+
+        <!-- Distance -->
+        <div class="field-group" id="distanceGroup" style="display:none">
+          <div class="field-label-row">Distance <span class="req-star">*</span></div>
+          <select id="distance" class="dark-select" onchange="computeWeeks(); checkValidity()">
+            <option value="">— Sélectionnez une distance —</option>
+          </select>
+        </div>
+
+        <!-- Date -->
+        <div class="field-group">
+          <div class="field-label-row">Date de la course <span class="req-star">*</span></div>
+          <input type="date" id="raceDate" class="dark-input date-input" onchange="computeWeeks(); checkValidity()">
+          <div class="weeks-badge" id="weeksBadge"></div>
+        </div>
+
+        <!-- Target Time -->
+        <div class="field-group">
+          <div class="field-label-row">
+            Objectif chrono
+            <span class="opt-tag">optionnel</span>
           </div>
-          <div class="field-group">
-            <label class="field-label">Objectif chrono <span class="opt-label">(optionnel)</span></label>
-            <input type="text" id="targetTime" class="dark-input" placeholder="ex : 4:00:00" maxlength="8" oninput="maskTime(this)">
-            <p class="field-hint">H:MM:SS · Laissez vide si pas d'objectif précis</p>
-          </div>
+          <input type="text" id="targetTime" class="dark-input" placeholder="ex : 4:00:00" maxlength="8" oninput="maskTime(this)">
+          <p class="field-hint">Format H:MM:SS · Laissez vide si aucun objectif précis</p>
         </div>
       </div>
 
-      <!-- Accordion 2 – Votre profil -->
-      <div class="acc-section" id="acc-2">
-        <button class="acc-header open" onclick="toggleAcc('acc-2')">
-          <span class="acc-num">2</span>
-          <span class="acc-title">Votre profil</span>
-          <span class="acc-arrow">▾</span>
-        </button>
-        <div class="acc-body">
-          <div class="form-row-2">
-            <div class="field-group">
-              <label class="field-label">Niveau</label>
-              <select id="level" class="dark-select" onchange="checkValidity()">
-                <option value="">— Niveau —</option>
-                <option value="Débutant">🌱 Débutant</option>
-                <option value="Intermédiaire">📈 Intermédiaire</option>
-                <option value="Confirmé">🏆 Confirmé</option>
-                <option value="Expert">⭐ Expert</option>
-              </select>
+      <!-- ─── STEP 2 – Votre profil ─── -->
+      <div class="step-content" id="step-2" style="display:none">
+        <div class="step-header">
+          <h3 class="step-title">Votre profil</h3>
+          <p class="step-desc">Partagez votre niveau et vos habitudes d'entraînement</p>
+        </div>
+
+        <!-- Level Cards -->
+        <div class="field-group">
+          <div class="field-label-row">Niveau de pratique <span class="req-star">*</span></div>
+          <div class="level-grid">
+            <div class="level-card" data-val="Débutant" onclick="selectLevel(this)">
+              <span class="lc-icon">🌱</span>
+              <div class="lc-text">
+                <span class="lc-label">Débutant</span>
+                <span class="lc-sub">Débute le running</span>
+              </div>
             </div>
-            <div class="field-group">
-              <label class="field-label">Séances/sem</label>
-              <select id="sessionsPerWeek" class="dark-select" onchange="checkValidity()">
-                <option value="">— Nb —</option>
-                <option value="2">2 / sem</option>
-                <option value="3">3 / sem</option>
-                <option value="4">4 / sem</option>
-                <option value="5">5 / sem</option>
-                <option value="6">6 / sem</option>
-              </select>
+            <div class="level-card" data-val="Intermédiaire" onclick="selectLevel(this)">
+              <span class="lc-icon">📈</span>
+              <div class="lc-text">
+                <span class="lc-label">Intermédiaire</span>
+                <span class="lc-sub">2 à 5 ans de pratique</span>
+              </div>
+            </div>
+            <div class="level-card" data-val="Confirmé" onclick="selectLevel(this)">
+              <span class="lc-icon">🏆</span>
+              <div class="lc-text">
+                <span class="lc-label">Confirmé</span>
+                <span class="lc-sub">5+ ans, compétitions</span>
+              </div>
+            </div>
+            <div class="level-card" data-val="Expert" onclick="selectLevel(this)">
+              <span class="lc-icon">⭐</span>
+              <div class="lc-text">
+                <span class="lc-label">Expert</span>
+                <span class="lc-sub">Haut niveau / FFA</span>
+              </div>
             </div>
           </div>
-          <div class="field-group">
-            <label class="field-label">
-              Km actuels / semaine
-              <span class="slider-val-inline" id="kmVal">30 km</span>
-            </label>
-            <input type="range" id="kmPerWeek" min="5" max="150" step="5" value="30" oninput="updateSlider()">
-            <p class="field-hint">5 – 150 km par semaine</p>
+          <select id="level" style="display:none" onchange="checkValidity()"></select>
+        </div>
+
+        <!-- Sessions per week -->
+        <div class="field-group">
+          <div class="field-label-row">Séances par semaine <span class="req-star">*</span></div>
+          <div class="seg-control">
+            <button type="button" class="seg-btn" data-val="2" onclick="selectSessions(this)">2</button>
+            <button type="button" class="seg-btn" data-val="3" onclick="selectSessions(this)">3</button>
+            <button type="button" class="seg-btn" data-val="4" onclick="selectSessions(this)">4</button>
+            <button type="button" class="seg-btn" data-val="5" onclick="selectSessions(this)">5</button>
+            <button type="button" class="seg-btn" data-val="6" onclick="selectSessions(this)">6</button>
           </div>
-          <div class="field-group">
-            <label class="field-label">VMA connue <span class="opt-label">(optionnel)</span></label>
-            <input type="number" id="vma" class="dark-input" placeholder="ex : 14.5 km/h" min="8" max="25" step="0.1" oninput="validateVMA(this); checkValidity()">
-            <p class="field-error" id="vmaErr">⚠ VMA entre 8 et 25 km/h</p>
+          <select id="sessionsPerWeek" style="display:none" onchange="checkValidity()"></select>
+        </div>
+
+        <!-- KM per week slider -->
+        <div class="field-group">
+          <div class="field-label-row">
+            Kilométrage hebdomadaire actuel
+            <span class="km-display" id="kmVal">30 km</span>
           </div>
-          <div class="vma-calc-box">
-            <p class="vma-calc-title">🧮 Calculer ma VMA depuis un chrono récent</p>
+          <input type="range" id="kmPerWeek" min="5" max="150" step="5" value="30" oninput="updateSlider()">
+          <div class="slider-minmax">
+            <span>5 km</span>
+            <span>150 km</span>
+          </div>
+        </div>
+
+        <!-- VMA -->
+        <div class="field-group">
+          <div class="field-label-row">
+            VMA (vitesse maximale aérobie)
+            <span class="opt-tag">optionnel</span>
+          </div>
+          <input type="number" id="vma" class="dark-input" placeholder="ex : 14.5 km/h" min="8" max="25" step="0.1" oninput="validateVMA(this); checkValidity()">
+          <p class="field-error" id="vmaErr">⚠ VMA entre 8 et 25 km/h</p>
+          <p class="field-hint">Permet des allures précises · sinon allures relatives</p>
+        </div>
+
+        <!-- VMA Calculator (collapsible) -->
+        <div class="vma-calc-box">
+          <button type="button" class="vcb-toggle" onclick="toggleVMACalc()">
+            <span>🧮 Calculer ma VMA depuis un chrono récent</span>
+            <span class="vcb-arrow" id="vcbArrow">▾</span>
+          </button>
+          <div class="vcb-body" id="vcbBody">
             <div class="form-row-2">
               <div class="field-group">
-                <label class="field-label" style="font-size:9px;">Distance réf.</label>
+                <div class="field-label-row" style="font-size:9px">Distance réf.</div>
                 <select id="calcDist" class="dark-select">
                   <option value="1.5">1 500 m</option>
                   <option value="3">3 000 m</option>
@@ -145,91 +210,117 @@
                 </select>
               </div>
               <div class="field-group">
-                <label class="field-label" style="font-size:9px;">Chrono (MM:SS)</label>
-                <input type="text" id="calcTime" class="dark-input" placeholder="ex : 25:30" maxlength="5" oninput="maskTimeShort(this)">
+                <div class="field-label-row" style="font-size:9px">Chrono (MM:SS)</div>
+                <input type="text" id="calcTime" class="dark-input" placeholder="25:30" maxlength="5" oninput="maskTimeShort(this)">
               </div>
             </div>
-            <button class="btn-calc-vma" onclick="calcVMA()">Estimer ma VMA</button>
+            <button type="button" class="btn-calc-vma" onclick="calcVMA()">Estimer ma VMA</button>
             <div class="vma-result" id="vmaResult"></div>
           </div>
         </div>
       </div>
 
-      <!-- Accordion 3 – Santé et blessures -->
-      <div class="acc-section" id="acc-3">
-        <button class="acc-header" onclick="toggleAcc('acc-3')">
-          <span class="acc-num">3</span>
-          <span class="acc-title">Santé &amp; blessures</span>
-          <span class="acc-arrow">▾</span>
-        </button>
-        <div class="acc-body" style="display:none;">
-          <div class="field-group">
-            <label class="field-label">Pathologies <span class="opt-label">(multi-sélection)</span></label>
-            <div class="pills-wrap" id="pillsGroup">
-              <label class="pill" id="pill-1"><input type="checkbox" value="Tendinite achille" onchange="syncPill('pill-1',this)"> Tendinite achille</label>
-              <label class="pill" id="pill-2"><input type="checkbox" value="Syndrome rotulien" onchange="syncPill('pill-2',this)"> Rotule</label>
-              <label class="pill" id="pill-3"><input type="checkbox" value="Périostite tibiale" onchange="syncPill('pill-3',this)"> Périostite</label>
-              <label class="pill" id="pill-4"><input type="checkbox" value="Fasciite plantaire" onchange="syncPill('pill-4',this)"> Fasciite</label>
-              <label class="pill" id="pill-5"><input type="checkbox" value="Lombalgie" onchange="syncPill('pill-5',this)"> Lombalgie</label>
-              <label class="pill" id="pill-6"><input type="checkbox" value="Entorse cheville" onchange="syncPill('pill-6',this)"> Cheville</label>
-              <label class="pill" id="pill-7"><input type="checkbox" value="Problème cardiaque suivi" onchange="syncPill('pill-7',this)"> Cardiaque</label>
-              <label class="pill" id="pill-8"><input type="checkbox" value="Asthme à l'effort" onchange="syncPill('pill-8',this)"> Asthme</label>
-              <label class="pill" id="pill-9"><input type="checkbox" value="Surpoids / reprise progressive" onchange="syncPill('pill-9',this)"> Reprise</label>
-              <label class="pill" id="pill-10"><input type="checkbox" value="Hernie discale" onchange="syncPill('pill-10',this)"> Hernie disc.</label>
-              <label class="pill" id="pill-11"><input type="checkbox" value="Syndrome de loge" onchange="syncPill('pill-11',this)"> Compartiment</label>
-            </div>
+      <!-- ─── STEP 3 – Santé & Options ─── -->
+      <div class="step-content" id="step-3" style="display:none">
+        <div class="step-header">
+          <h3 class="step-title">Santé &amp; Options</h3>
+          <p class="step-desc">Personnalisez les paramètres avancés de votre programme</p>
+        </div>
+
+        <!-- Health pills -->
+        <div class="field-group">
+          <div class="field-label-row">
+            Pathologies ou contraintes
+            <span class="opt-tag">multi-choix</span>
           </div>
-          <div class="field-group">
-            <label class="field-label">Précisions <span class="opt-label">(optionnel)</span></label>
-            <textarea id="injuriesDetail" class="dark-textarea" placeholder="Ex : reprise après fracture de fatigue il y a 3 mois, suivi kiné hebdomadaire..."></textarea>
+          <div class="pills-wrap" id="pillsGroup">
+            <label class="pill" id="pill-1"><input type="checkbox" value="Tendinite achille" onchange="syncPill('pill-1',this)"> Tendinite achille</label>
+            <label class="pill" id="pill-2"><input type="checkbox" value="Syndrome rotulien" onchange="syncPill('pill-2',this)"> Rotule</label>
+            <label class="pill" id="pill-3"><input type="checkbox" value="Périostite tibiale" onchange="syncPill('pill-3',this)"> Périostite</label>
+            <label class="pill" id="pill-4"><input type="checkbox" value="Fasciite plantaire" onchange="syncPill('pill-4',this)"> Fasciite</label>
+            <label class="pill" id="pill-5"><input type="checkbox" value="Lombalgie" onchange="syncPill('pill-5',this)"> Lombalgie</label>
+            <label class="pill" id="pill-6"><input type="checkbox" value="Entorse cheville" onchange="syncPill('pill-6',this)"> Cheville</label>
+            <label class="pill" id="pill-7"><input type="checkbox" value="Problème cardiaque suivi" onchange="syncPill('pill-7',this)"> Cardiaque</label>
+            <label class="pill" id="pill-8"><input type="checkbox" value="Asthme à l'effort" onchange="syncPill('pill-8',this)"> Asthme</label>
+            <label class="pill" id="pill-9"><input type="checkbox" value="Surpoids / reprise progressive" onchange="syncPill('pill-9',this)"> Reprise</label>
+            <label class="pill" id="pill-10"><input type="checkbox" value="Hernie discale" onchange="syncPill('pill-10',this)"> Hernie disc.</label>
+            <label class="pill" id="pill-11"><input type="checkbox" value="Syndrome de loge" onchange="syncPill('pill-11',this)"> Compartiment</label>
           </div>
+        </div>
+
+        <div class="field-group">
+          <div class="field-label-row">
+            Précisions médicales
+            <span class="opt-tag">optionnel</span>
+          </div>
+          <textarea id="injuriesDetail" class="dark-textarea" placeholder="Ex : reprise après fracture de fatigue il y a 3 mois, suivi kiné hebdomadaire…"></textarea>
+        </div>
+
+        <!-- Method -->
+        <div class="field-group">
+          <div class="field-label-row">Méthode d'entraînement</div>
+          <select id="planStyle" class="dark-select" onchange="updateStyleHint()">
+            <option value="Classique FFA">📋 Classique FFA</option>
+            <option value="80/20 Polarisé">🎯 80/20 Polarisé</option>
+            <option value="Lydiard">🏔 Lydiard</option>
+            <option value="HIIT Intensif">⚡ HIIT Intensif</option>
+            <option value="Progressif doux">🌱 Progressif Doux</option>
+          </select>
+          <p class="field-hint" id="styleHint"></p>
+        </div>
+
+        <!-- Model -->
+        <div class="field-group">
+          <div class="field-label-row">Modèle Claude</div>
+          <select id="apiModel" class="dark-select">
+            <option value="claude-opus-4-6">Claude Opus 4.6 · Le plus puissant</option>
+            <option value="claude-sonnet-4-6" selected>Claude Sonnet 4.6 · Recommandé ✓</option>
+            <option value="claude-haiku-4-5-20251001">Claude Haiku 4.5 · Rapide &amp; économique</option>
+            <option value="claude-3-5-sonnet-20241022">Claude 3.5 Sonnet · Précédente génération</option>
+            <option value="claude-3-5-haiku-20241022">Claude 3.5 Haiku · Précédente génération</option>
+          </select>
+        </div>
+
+        <!-- Detail level -->
+        <div class="field-group">
+          <div class="field-label-row">Niveau de détail du plan</div>
+          <select id="detailLevel" class="dark-select">
+            <option value="concis">Concis – type + durée</option>
+            <option value="standard">Standard – éch. + cœur + récup</option>
+            <option value="detaille" selected>Détaillé – allures + séquences complètes</option>
+          </select>
         </div>
       </div>
 
-      <!-- Accordion 4 – Modèle et options -->
-      <div class="acc-section" id="acc-4">
-        <button class="acc-header" onclick="toggleAcc('acc-4')">
-          <span class="acc-num">4</span>
-          <span class="acc-title">Modèle &amp; options</span>
-          <span class="acc-arrow">▾</span>
-        </button>
-        <div class="acc-body" style="display:none;">
-          <div class="field-group">
-            <label class="field-label">Méthode d'entraînement</label>
-            <select id="planStyle" class="dark-select" onchange="updateStyleHint()">
-              <option value="Classique FFA">📋 Classique FFA</option>
-              <option value="80/20 Polarisé">🎯 80/20 Polarisé</option>
-              <option value="Lydiard">🏔 Lydiard</option>
-              <option value="HIIT Intensif">⚡ HIIT Intensif</option>
-              <option value="Progressif doux">🌱 Progressif Doux</option>
-            </select>
-            <p class="field-hint" id="styleHint"></p>
-          </div>
-          <div class="field-group">
-            <label class="field-label">Modèle Claude</label>
-            <select id="apiModel" class="dark-select">
-              <option value="claude-opus-4-6">Claude Opus 4.6 · Le plus puissant</option>
-              <option value="claude-sonnet-4-6" selected>Claude Sonnet 4.6 · Recommandé ✓</option>
-              <option value="claude-haiku-4-5-20251001">Claude Haiku 4.5 · Rapide &amp; économique</option>
-              <option value="claude-3-5-sonnet-20241022">Claude 3.5 Sonnet · Précédente génération</option>
-              <option value="claude-3-5-haiku-20241022">Claude 3.5 Haiku · Précédente génération</option>
-            </select>
-          </div>
-          <div class="field-group">
-            <label class="field-label">Niveau de détail</label>
-            <select id="detailLevel" class="dark-select">
-              <option value="concis">Concis (type + durée)</option>
-              <option value="standard">Standard (éch. + cœur + récup)</option>
-              <option value="detaille" selected>Détaillé (allures + séquences)</option>
-            </select>
-          </div>
-        </div>
+    </div><!-- /steps-container -->
+
+    <!-- Step navigation (Prev / Dots / Next) -->
+    <div class="step-nav">
+      <button type="button" class="btn-step btn-step-prev" id="btnPrev" onclick="prevStep()" style="visibility:hidden">
+        ← Retour
+      </button>
+      <div class="step-dots">
+        <div class="sdot active" id="dot-1"></div>
+        <div class="sdot" id="dot-2"></div>
+        <div class="sdot" id="dot-3"></div>
       </div>
+      <button type="button" class="btn-step btn-step-next" id="btnNext" onclick="nextStep()">
+        Suivant →
+      </button>
+    </div>
 
-    </div><!-- /accordion-area -->
-
-    <!-- Generate Button -->
+    <!-- Generate area (always visible) -->
     <div class="gen-area">
+      <div class="api-row">
+        <span class="api-label">🔑 Clé API Anthropic</span>
+        <span class="api-hint-inline">console.anthropic.com → API Keys</span>
+      </div>
+      <div class="pw-wrap">
+        <input type="password" id="apiKey" class="dark-input" placeholder="sk-ant-xxxxxxxxxxxxxxxx" autocomplete="off" oninput="checkValidity()">
+        <button type="button" class="btn-toggle-pw" onclick="togglePw()" title="Afficher / Masquer">👁</button>
+      </div>
+      <p class="field-hint" style="margin:5px 0 12px">Non stockée · utilisée uniquement pour api.anthropic.com</p>
+
       <button class="btn-generate" id="btnGenerate" onclick="generatePlan()" disabled>
         <span class="btn-icon">✨</span>
         <span id="btnLabel">Générer mon plan d'entraînement</span>
@@ -239,9 +330,9 @@
 
   </aside><!-- /left-panel -->
 
-  <!-- ════════════════════════════════
-       RIGHT STAGE (light area)
-  ════════════════════════════════ -->
+  <!-- ═══════════════════════════════════════
+       RIGHT STAGE
+  ═══════════════════════════════════════ -->
   <main class="right-stage">
 
     <!-- Welcome State -->
@@ -317,7 +408,7 @@
         </div>
       </div>
 
-      <!-- Table Wrapper -->
+      <!-- Table -->
       <div class="plan-table-wrap">
         <table class="plan-table" id="planTable">
           <thead>
@@ -336,7 +427,7 @@
         </table>
       </div>
 
-      <!-- Legend Bar -->
+      <!-- Legend -->
       <div class="legend-bar">
         <h4 class="legend-title">Légende des types de séances</h4>
         <div class="legend-items">
@@ -357,9 +448,9 @@
 
 </div><!-- /app-layout -->
 
-<!-- ════════════════════════════════
+<!-- ═══════════════════════════════════════
      MODAL – Glossaire
-════════════════════════════════ -->
+═══════════════════════════════════════ -->
 <div class="modal-overlay" id="modalGlossary" onclick="overlayClose(event,'modalGlossary')">
   <div class="modal-box">
     <button class="modal-close" onclick="closeModal('modalGlossary')">✕</button>
@@ -385,17 +476,17 @@
   </div>
 </div>
 
-<!-- ════════════════════════════════
+<!-- ═══════════════════════════════════════
      MODAL – Regen
-════════════════════════════════ -->
+═══════════════════════════════════════ -->
 <div class="modal-overlay" id="modalRegen" onclick="overlayClose(event,'modalRegen')">
   <div class="modal-box modal-box-sm">
     <button class="modal-close" onclick="closeModal('modalRegen')">✕</button>
     <h3 class="modal-title">🔄 Régénérer la semaine <span id="regenWeekNum"></span></h3>
     <p class="modal-desc">Donnez une consigne spécifique ou laissez vide pour une régénération standard.</p>
     <div class="field-group">
-      <label class="field-label" style="color:#333;">Consigne spéciale <span class="opt-label">(optionnel)</span></label>
-      <textarea id="regenNote" placeholder="Ex : j'ai un voyage ce weekend, pas de sortie longue. Ou : augmenter l'intensité. Ou : remplacer VMA par seuil..." style="border:1.5px solid #f7bfd9;border-radius:8px;width:100%;padding:9px 11px;font-size:12px;resize:vertical;min-height:70px;font-family:inherit;background:#fff;color:#000;outline:none;transition:border-color .15s;"></textarea>
+      <label class="field-label-row" style="color:#333;">Consigne spéciale <span class="opt-tag" style="background:#f7bfd9;border-color:#f773b4;color:#c94090">optionnel</span></label>
+      <textarea id="regenNote" placeholder="Ex : j'ai un voyage ce weekend, pas de sortie longue. Ou : augmenter l'intensité…" style="border:1.5px solid #f7bfd9;border-radius:8px;width:100%;padding:9px 11px;font-size:12px;resize:vertical;min-height:70px;font-family:inherit;background:#fff;color:#000;outline:none;transition:border-color .15s;" onfocus="this.style.borderColor='#f773b4'" onblur="this.style.borderColor='#f7bfd9'"></textarea>
     </div>
     <button class="btn-generate-modal" onclick="confirmRegen()">
       <span>🔄</span> Régénérer cette semaine

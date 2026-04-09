@@ -4,6 +4,31 @@ Toutes les modifications notables de ce projet sont documentées ici.
 
 ---
 
+## [2.1.0] — 2026-04-09
+
+### Refonte UX — wizard 3 étapes & sélection visuelle
+
+#### Ajouté
+- **Navigation wizard** en 3 étapes (Course → Profil → Options) avec indicateur de progression, boutons Retour/Suivant et points de progression animés
+- **Cards visuelles cliquables** pour le type de course (grille 3×2 avec icônes) et pour le niveau de pratique (grille 2×2 avec sous-titres descriptifs)
+- **Sélecteur segmenté** pour le nombre de séances par semaine (boutons 2/3/4/5/6)
+- **Date picker natif** (`type="date"`) — remplace la saisie masquée JJ/MM/AAAA ; date minimum automatiquement fixée à aujourd'hui
+- Calculateur VMA **repliable** (accordéon inline)
+- Zone de génération **toujours visible** en bas du panneau (clé API + bouton Générer)
+- Labels min/max sur le slider kilométrage
+
+#### Modifié
+- Panel gauche élargi de 360 px → **440 px** pour plus de confort de lecture
+- `parseLocalDate()` accepte désormais les deux formats : `YYYY-MM-DD` (natif) et `DD/MM/YYYY` (héritage)
+- Architecture accordéons (4 sections) remplacée par le wizard 3 étapes
+- Indicateurs d'étapes complétées (✓) sur les cercles de navigation
+
+#### Conservé
+- Charte graphique identique : `--pink #f773b4`, noir, blanc, rose pâle
+- Toute la logique métier (API Claude, prompts, parsing, export, impression, regen)
+
+---
+
 ## [2.0.0] — 2026-04-08
 
 ### Refonte UX/UI complète — architecture 3 fichiers

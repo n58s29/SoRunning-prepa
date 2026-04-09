@@ -23,12 +23,12 @@ Application web 100 % front-end (HTML/CSS/JS) qui produit un plan d'entraînemen
 
 1. Ouvrez `index.html` dans un navigateur moderne (Chrome, Edge, Firefox)
 2. Entrez votre clé API Anthropic (`sk-ant-...`) — obtenez-la sur [console.anthropic.com](https://console.anthropic.com)
-3. Remplissez les 4 sections du panneau gauche :
-   - **1. La course cible** — type, distance, date, objectif chrono
-   - **2. Votre profil** — niveau, séances/semaine, kilométrage, VMA
-   - **3. Santé & blessures** — pathologies à prendre en compte
-   - **4. Modèle & options** — choix du modèle Claude, méthode, niveau de détail
-4. Cliquez sur **Générer mon plan**
+3. Parcourez le **wizard en 3 étapes** dans le panneau gauche :
+   - **Étape 1 – Course** — type (cards visuelles), distance, date, objectif chrono
+   - **Étape 2 – Profil** — niveau (cards), séances/semaine, kilométrage, VMA
+   - **Étape 3 – Options** — pathologies, méthode d'entraînement, modèle Claude, détail
+4. Entrez votre clé API dans la zone de génération (toujours visible en bas)
+5. Cliquez sur **Générer mon plan d'entraînement**
 
 > La clé API n'est jamais stockée. Elle est utilisée uniquement pour l'appel direct à `api.anthropic.com` depuis votre navigateur.
 
@@ -45,9 +45,9 @@ Application web 100 % front-end (HTML/CSS/JS) qui produit un plan d'entraînemen
 ## Structure des fichiers
 
 ```
-index.html   — Structure HTML (panneau accordéon + stage plan)
-style.css    — Design dark panel / light stage, animations, responsive table
-app.js       — Logique : API Claude, génération du prompt, parsing JSON,
+index.html   — Structure HTML (wizard 3 étapes + stage plan)
+style.css    — Design dark panel / light stage, cards visuelles, animations
+app.js       — Logique : wizard, API Claude, génération du prompt, parsing JSON,
                rendu tableau, export CSV, impression PDF, calculateur VMA
 ```
 

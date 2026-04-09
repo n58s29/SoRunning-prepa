@@ -61,8 +61,14 @@ var _progressTimer = null;
 // INIT
 // ══════════════════════════════════════════════════════════════
 window.addEventListener('DOMContentLoaded', function () {
+  // Set date min to today
+  var today = new Date().toISOString().split('T')[0];
+  var dateEl = document.getElementById('raceDate');
+  if (dateEl) dateEl.min = today;
+
   updateSlider();
   updateStyleHint();
+  goToStep(1);
 });
 
 // ══════════════════════════════════════════════════════════════
@@ -152,7 +158,11 @@ function escHtml(s) {
 // ══════════════════════════════════════════════════════════════
 function parseLocalDate(str) {
   if (!str) return null;
-  var m = str.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+  // YYYY-MM-DD (native date input)
+  var m = str.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/);
+  if (m) return new Date(+m[1], +m[2] - 1, +m[3]);
+  // DD/MM/YYYY (legacy)
+  m = str.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
   if (!m) return null;
   return new Date(+m[3], +m[2] - 1, +m[1]);
 }
@@ -815,7 +825,7 @@ function showError(msg) {
   document.getElementById('errorBox').style.display       = 'flex';
   document.getElementById('welcomeState').style.display   = 'flex';
   document.getElementById('btnGenerate').disabled         = false;
-  document.getElementById('btnLabel').textContent         = 'Générer mon plan d\'entraînement';
+  document.getElementById('btnLabel').textContent         = 'Générer mon plan';
 }
 
 function resetPlan() {
@@ -839,4 +849,95 @@ function closeModal(id) {
 
 function overlayClose(e, id) {
   if (e.target === document.getElementById(id)) closeModal(id);
+}
+
+// ══════════════════════════════════════════════════════════════
+// WIZARD NAVIGATION
+// ══════════════════════════════════════════════════════════════
+var _currentStep = 1;
+var TOTAL_STEPS  = 3;
+
+function goToStep(n) {
+  if (n < 1 || n > TOTAL_STEPS) return;
+
+  for (var i = 1; i <= TOTAL_STEPS; i++) {
+    var s   = document.getElementById('step-' + i);
+    var wn  = document.getElementById('wn-' + i);
+    var dot = document.getElementById('dot-' + i);
+    if (s)   s.style.display = 'none';
+    if (wn)  { wn.classList.remove('active', 'done'); }
+    if (dot) dot.classList.remove('active');
+  }
+
+  var target = document.getElementById('step-' + n);
+  if (target) target.style.display = 'block';
+
+  for (var j = 1; j <= TOTAL_STEPS; j++) {
+    var wnj  = document.getElementById('wn-' + j);
+    var dotj = document.getElementById('dot-' + j);
+    if (j < n  && wnj)  wnj.classList.add('done');
+    if (j === n) {
+      if (wnj)  wnj.classList.add('active');
+      if (dotj) dotj.classList.add('active');
+    }
+  }
+
+  var prev = document.getElementById('btnPrev');
+  var next = document.getElementById('btnNext');
+  if (prev) prev.style.visibility = (n > 1) ? 'visible' : 'hidden';
+  if (next) next.style.visibility = (n < TOTAL_STEPS) ? 'visible' : 'hidden';
+
+  var sc = document.querySelector('.steps-container');
+  if (sc) sc.scrollTop = 0;
+
+  _currentStep = n;
+}
+
+function nextStep() { goToStep(_currentStep + 1); }
+function prevStep() { goToStep(_currentStep - 1); }
+
+// ══════════════════════════════════════════════════════════════
+// VISUAL CARD SELECTORS
+// ══════════════════════════════════════════════════════════════
+function selectRaceType(el) {
+  document.querySelectorAll('.race-card').forEach(function (c) { c.classList.remove('selected'); });
+  el.classList.add('selected');
+
+  var sel = document.getElementById('raceType');
+  if (sel) sel.value = el.dataset.val;
+
+  updateDistances();
+  var dg = document.getElementById('distanceGroup');
+  if (dg) dg.style.display = 'block';
+  checkValidity();
+}
+
+function selectLevel(el) {
+  document.querySelectorAll('.level-card').forEach(function (c) { c.classList.remove('selected'); });
+  el.classList.add('selected');
+
+  var sel = document.getElementById('level');
+  if (sel) sel.value = el.dataset.val;
+  checkValidity();
+}
+
+function selectSessions(el) {
+  document.querySelectorAll('.seg-btn').forEach(function (b) { b.classList.remove('selected'); });
+  el.classList.add('selected');
+
+  var sel = document.getElementById('sessionsPerWeek');
+  if (sel) sel.value = el.dataset.val;
+  checkValidity();
+}
+
+// ══════════════════════════════════════════════════════════════
+// VMA CALC TOGGLE
+// ══════════════════════════════════════════════════════════════
+function toggleVMACalc() {
+  var body  = document.getElementById('vcbBody');
+  var arrow = document.getElementById('vcbArrow');
+  if (!body) return;
+  var isOpen = body.style.display !== 'none';
+  body.style.display  = isOpen ? 'none' : 'block';
+  if (arrow) arrow.textContent = isOpen ? '▾' : '▴';
 }
