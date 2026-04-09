@@ -69,6 +69,10 @@ app.js       — Logique : wizard, API Claude, génération du prompt, parsing J
 - Clé API Anthropic active avec crédits disponibles
 - Connexion internet (appel direct à `api.anthropic.com`)
 
+## Version
+
+**v2.1.1** — Fix bouton Générer grisé (select niveau sans options) · voir [CHANGELOG.md](CHANGELOG.md)
+
 ## Limites connues
 
 - Plans ≥ 8 semaines : le niveau de détail est automatiquement réduit pour ne pas dépasser la limite de 8 192 tokens de sortie

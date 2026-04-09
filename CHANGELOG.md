@@ -4,6 +4,16 @@ Toutes les modifications notables de ce projet sont documentées ici.
 
 ---
 
+## [2.1.1] — 2026-04-09
+
+### Fix — bouton Générer toujours grisé
+
+#### Corrigé
+- **`<select id="level">` vide** — le select caché du niveau de pratique n'avait aucune `<option>`, ce qui empêchait `checkValidity()` de détecter la sélection d'une carte niveau ; le bouton Générer restait donc grisé même après avoir sélectionné tous les champs obligatoires
+- Ajout des 4 options manquantes (`Débutant`, `Intermédiaire`, `Confirmé`, `Expert`) alignées avec les level-cards cliquables
+
+---
+
 ## [2.1.0] — 2026-04-09
 
 ### Refonte UX — wizard 3 étapes & sélection visuelle
